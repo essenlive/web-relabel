@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import ReactMapGL, { Popup, FlyToInterpolator, Source, Layer } from 'react-map-gl';
+import ReactMapGL, { Popup, Source, Layer } from 'react-map-gl';
 import styles from "@styles/pages/Structures.module.css";
 import LabelStructure from '@components/LabelStructure';
 import Card from '@components/Card';
@@ -72,7 +72,6 @@ export default function ReactMap({ className, structures, initialViewport, color
           longitude: feature.geometry.coordinates[0],
           latitude: feature.geometry.coordinates[1],
           transitionDuration: 500,
-          transitionInterpolator: new FlyToInterpolator(),
         });
       });
 
@@ -87,7 +86,6 @@ export default function ReactMap({ className, structures, initialViewport, color
         longitude: data.longitude,
         latitude: data.latitude,
         transitionDuration: 500,
-        transitionInterpolator: new FlyToInterpolator(),
       });
       setSelection(data)
       setPicker(null)
@@ -99,7 +97,6 @@ export default function ReactMap({ className, structures, initialViewport, color
         longitude: feature.geometry.coordinates[0],
         latitude: feature.geometry.coordinates[1],
         transitionDuration: 500,
-        transitionInterpolator: new FlyToInterpolator(),
       });
       setSelection(null)
       setPicker(data)
@@ -113,7 +110,6 @@ export default function ReactMap({ className, structures, initialViewport, color
         longitude: el.longitude,
         latitude: el.latitude,
         transitionDuration: 500,
-        transitionInterpolator: new FlyToInterpolator(),
       });
       setSelection(el)
       setPicker(null)
