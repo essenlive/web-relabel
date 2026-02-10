@@ -2,7 +2,7 @@ import classNames from "classnames"
 import styles from "@styles/components/LabelCommunity.module.css";
 import { useEffect, useState, useRef } from "react";
 import dynamic from 'next/dynamic'
-const P5Wrapper = dynamic(() => import('react-p5-wrapper'), { ssr: false })
+const P5Wrapper = dynamic(() => import('react-p5-wrapper').then(mod => mod.ReactP5Wrapper), { ssr: false })
 
 
 export default function LabelCommunity({ community,  bordered }) {

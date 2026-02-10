@@ -5,15 +5,18 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "airtable:export": "tsx scripts/export-airtable.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.7.0",
     "@uploadcare/react-widget": "^2.4.5",
     "airtable": "^0.12.2",
+    "better-sqlite3": "^12.6.2",
     "classnames": "^2.3.1",
     "color-scheme": "^1.0.1",
     "formik": "^2.2.9",
+    "mapbox-gl": "^3.18.1",
     "mathjs": "^12.1.0",
     "next": "^14.0.3",
     "next-qrcode": "^2.5.1",

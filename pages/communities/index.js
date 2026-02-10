@@ -1,7 +1,9 @@
 import Layout from '@components/Layout';
-import LabelCommunity from '@components/LabelCommunity';
+import dynamic from 'next/dynamic';
 import Card from '@components/Card';
 import prisma, {serialize} from '@libs/prisma'
+
+const LabelCommunity = dynamic(() => import('@components/LabelCommunity'), { ssr: false });
 
 
 export default function Communities({ communities }) {
