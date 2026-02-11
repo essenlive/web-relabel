@@ -18,7 +18,6 @@ interface CommunityWithData extends Partial<Community> {
     data?: CommunityData;
     name?: string;
     colors?: string[];
-    structures?: string[] | Structure[];
 }
 
 interface LabelCommunityProps {
@@ -27,27 +26,28 @@ interface LabelCommunityProps {
 }
 
 export default function LabelCommunity({ community,  bordered }: LabelCommunityProps) {
-    community.data = {designers: 0,suppliers: 0,workshops: 0,others: 0}
-    if (!community.structures) {
-        community.structures = [
+    const structures: any[] = Array.isArray(community.structures) && community.structures.length > 0
+        ? community.structures
+        : [
             {"typologies": ["stockage"]},
             {"typologies": ["stockage"]},
-            { "typologies": ["designer"], },
-            { "typologies": ["designer"], },
-            { "typologies": ["designer"], },
-            { "typologies": ["atelier"], },
-            { "typologies": ["atelier"], },
-            { "typologies": ["atelier"], },
-            { "typologies": ["atelier"], },
-            { "typologies": ["autres"], },
-            { "typologies": ["autres"],},
-        ] as any;
-    }
-    (community.structures as any[]).forEach((structure: any) => {
-        if (structure.typologies.indexOf('autre') >= 0) community.data!.others++
-        if (structure.typologies.indexOf('designer') >= 0) community.data!.designers++
-        if (structure.typologies.indexOf('atelier') >= 0) community.data!.workshops++
-        if (structure.typologies.indexOf('stockage') >= 0) community.data!.suppliers++
+            {"typologies": ["designer"]},
+            {"typologies": ["designer"]},
+            {"typologies": ["designer"]},
+            {"typologies": ["atelier"]},
+            {"typologies": ["atelier"]},
+            {"typologies": ["atelier"]},
+            {"typologies": ["atelier"]},
+            {"typologies": ["autres"]},
+            {"typologies": ["autres"]},
+        ];
+
+    const labelData: CommunityData = { designers: 0, suppliers: 0, workshops: 0, others: 0 };
+    structures.forEach((structure: any) => {
+        if (structure.typologies?.indexOf('autre') >= 0) labelData.others++;
+        if (structure.typologies?.indexOf('designer') >= 0) labelData.designers++;
+        if (structure.typologies?.indexOf('atelier') >= 0) labelData.workshops++;
+        if (structure.typologies?.indexOf('stockage') >= 0) labelData.suppliers++;
     });
 
     const [width, setWidth] = useState<number>(400)
@@ -62,7 +62,7 @@ export default function LabelCommunity({ community,  bordered }: LabelCommunityP
                 { [`${styles.bordered}`]: bordered })}>
 
             <div className={styles.sketch}>
-                <Sketch community={community} />
+                <Sketch community={community} labelData={labelData} structures={structures} />
             </div>
             <h2 className={styles.name}> {community.name && community.name}</h2>
             <h4 className={styles.date}> {community.year && community.year}</h4>
@@ -74,9 +74,11 @@ export default function LabelCommunity({ community,  bordered }: LabelCommunityP
 
 interface SketchProps {
     community: CommunityWithData;
+    labelData: CommunityData;
+    structures: any[];
 }
 
-const Sketch = ({ community }: SketchProps) => {
+const Sketch = ({ community, labelData, structures }: SketchProps) => {
 
     function sketch(p5: any) {
 
@@ -86,10 +88,6 @@ const Sketch = ({ community }: SketchProps) => {
         const dim = 100;
         const nbCases = width / dim;
         const ep = 20;
-
-        // let ratio = (nbCases - 2) * (nbCases - 2) + (nbCases - 3) * 4;
-        // To have exactly the right number of colors in the stack
-        // let dataEmpty = ratio - dataPartners < 0 ? 0 : ratio - dataPartners;
 
         let [c1, c2, c3, c4 ] = community.colors && community.colors.length >= 4 ? community.colors : ["#D3494E", "#FFE5AD", "#13BBAF", "#7BC8F6"]
         let empty: any = "#e1e1e1";
@@ -109,15 +107,15 @@ const Sketch = ({ community }: SketchProps) => {
 
             initAvailableColors()
             initNodes(nbCases)
-            initPartnerNodes((community.structures as any[]).length >= 25 ? 25 : (community.structures as any[]).length);
+            initPartnerNodes(structures.length >= 25 ? 25 : structures.length);
         }
 
         // Fill colorStack colorstack
         function initAvailableColors() {
-            const designers = Array(community.data!.designers).fill(c1)
-            const workshops = Array(community.data!.workshops).fill(c2)
-            const suppliers = Array(community.data!.suppliers).fill(c3)
-            const others = Array(community.data!.others).fill(c4)
+            const designers = Array(labelData.designers).fill(c1)
+            const workshops = Array(labelData.workshops).fill(c2)
+            const suppliers = Array(labelData.suppliers).fill(c3)
+            const others = Array(labelData.others).fill(c4)
             colorStack = [...designers, ...workshops, ...suppliers, ...others];
         }
         // Initialize false node grid

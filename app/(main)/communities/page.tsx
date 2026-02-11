@@ -4,7 +4,7 @@ import Card from '@components/Card';
 import LabelCommunity from '@components/LabelCommunity';
 import { getCommunities } from '@libs/data';
 
-export const revalidate = 1;
+export const revalidate = 60;
 export const metadata: Metadata = {
   title: 'Re-label | Communaut\u00e9s',
   description: "Le Re-Label vise animer des communaut\u00e9s de bonnes pratiques localis\u00e9es sur le territoire.",

@@ -2,6 +2,7 @@
 
 export interface Structure {
   id: string;
+  created_at?: string;
   name: string;
   adress: string;
   description: string;
@@ -11,20 +12,19 @@ export interface Structure {
   website?: string;
   illustrations: string[];
   colors: string[];
-  communities: string[] | Community[];
+  communities: Community[];
   longitude: number;
   latitude: number;
-  projects_designer: string[];
-  projects_workshop: string[];
-  projects_supplier: string[];
-  projects_other: string[];
   rgpd?: boolean;
-  data?: number[];
+  is_draft?: boolean;
+  data?: number[];       // [designerCount, otherCount, supplierCount, workshopCount]
   projects?: Project[];
+  partners?: Structure[];
 }
 
 export interface Community {
   id: string;
+  created_at?: string;
   name: string;
   year: number;
   description: string;
@@ -32,23 +32,25 @@ export interface Community {
   contact: string;
   website?: string;
   colors: string[];
-  structures: string[] | Structure[];
+  structures: Structure[];
   status?: boolean;
+  is_draft?: boolean;
   mapData?: GeoJSONFeatureCollection;
 }
 
 export interface Project {
   id: string;
+  created_at?: string;
   name: string;
   typology: string;
   description: string;
   team: string[];
   date: string;
   duration: number;
-  designers: string[] | Structure[];
-  workshops: string[] | Structure[];
-  suppliers: string[] | Structure[];
-  others: string[] | Structure[];
+  designers: Structure[];
+  workshops: Structure[];
+  suppliers: Structure[];
+  others: Structure[];
   contact: string;
   website?: string;
   illustrations: string[];
@@ -66,6 +68,7 @@ export interface Project {
   fab_tools: string;
   fab_social: string;
   rgpd?: boolean;
+  is_draft?: boolean;
   data?: {
     partners: number;
     materials: number;

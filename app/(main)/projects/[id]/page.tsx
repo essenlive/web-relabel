@@ -3,7 +3,7 @@ import { getProject, getAllProjectIds } from '@libs/data';
 import ProjectDetail from './ProjectDetail';
 import type { Project } from '../../../../types';
 
-export const revalidate = 1;
+export const revalidate = 60;
 
 export async function generateStaticParams(): Promise<{ id: string }[]> {
   return await getAllProjectIds();

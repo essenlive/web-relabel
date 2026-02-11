@@ -5,7 +5,7 @@ import Card from '@components/Card';
 import { getProjects } from '@libs/data';
 import type { Project } from '../../../types';
 
-export const revalidate = 1;
+export const revalidate = 60;
 export const metadata: Metadata = {
   title: 'Re-label | Productions',
   description: "Le Re-Label vise a mettre en avant les projets labelisés et issus d'une démarche responsable.",

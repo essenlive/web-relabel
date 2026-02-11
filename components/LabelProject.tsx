@@ -15,14 +15,17 @@ interface LabelProductionProps {
 
 export default function LabelProduction({ project, bordered }: LabelProductionProps) {
 
-    let score = scoring(project as any);
-    project.data = {
-        partners: (project.designers as any[]).length + (project.workshops as any[]).length + (project.suppliers as any[]).length + (project.others as any[]).length,
+    const score = scoring(project as any);
+    const designers = Array.isArray(project.designers) ? project.designers : [];
+    const workshops = Array.isArray(project.workshops) ? project.workshops : [];
+    const suppliers = Array.isArray(project.suppliers) ? project.suppliers : [];
+    const others = Array.isArray(project.others) ? project.others : [];
+    const labelData = {
+        partners: designers.length + workshops.length + suppliers.length + others.length,
         materials: score.material,
         gestion: score.design,
         production: score.fab
-    }
-
+    };
 
     const [width, setWidth] = useState<number>(400)
     const ref = useRef<HTMLDivElement>(null);
@@ -39,7 +42,7 @@ export default function LabelProduction({ project, bordered }: LabelProductionPr
             { [`${styles.bordered}`]: bordered })}>
 
             <div className={styles.sketch}>
-                {project.data && <Sketch project={project} />}
+                <Sketch project={project} labelData={labelData} />
             </div>
 
             <h2 className={styles.name}> {project.name && project.name } </h2>
@@ -58,12 +61,20 @@ export default function LabelProduction({ project, bordered }: LabelProductionPr
 }
 
 
-interface SketchProps {
-    project: Partial<Project>;
+interface ProjectLabelData {
+    partners: number;
+    materials: number;
+    gestion: number;
+    production: number;
 }
 
-const Sketch = ({project}: SketchProps) => {
-    let { partners, production, materials, gestion } = project.data!;
+interface SketchProps {
+    project: Partial<Project>;
+    labelData: ProjectLabelData;
+}
+
+const Sketch = ({project, labelData}: SketchProps) => {
+    let { partners, production, materials, gestion } = labelData;
     function sketch(p5: any) {
         // Constantes graphiques
         const width = 600;

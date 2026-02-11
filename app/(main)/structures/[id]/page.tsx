@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { getStructure, getAllStructureIds } from '@libs/data';
 import StructureDetail from './StructureDetail';
 
-export const revalidate = 1;
+export const revalidate = 60;
 
 export async function generateStaticParams(): Promise<{ id: string }[]> {
   return await getAllStructureIds();

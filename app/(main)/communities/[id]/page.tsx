@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { getCommunity, getAllCommunityIds } from '@libs/data';
 import CommunityDetail from './CommunityDetail';
 
-export const revalidate = 1;
+export const revalidate = 60;
 
 export async function generateStaticParams(): Promise<{ id: string }[]> {
   return await getAllCommunityIds();

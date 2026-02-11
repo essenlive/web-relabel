@@ -2,41 +2,48 @@
 import Link from 'next/link'
 import { Formik } from 'formik';
 import classNames from 'classnames';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation'
-import useSWR from 'swr'
+import { createClient } from '@libs/supabase/client'
 import styles from "@styles/pages/Form.module.css";
 import Layout from '@components/Layout'
 import LabelCommunity from '@components/LabelCommunity';
 import { Inputs } from '@components/Inputs';
 import Tags from '@components/Tags';
 import { communityForm } from '@libs/formsData';
-import type { Community } from '../../../../types';
 import dynamic from 'next/dynamic'
 const Confetti = dynamic(() => import('react-confetti'), { ssr: false })
-const fetcher = (...args: [RequestInfo, RequestInit?]): Promise<any> => fetch(...args).then((res) => res.json())
 
 export default function AddCommunitiesForm(): React.JSX.Element | React.ReactElement {
     const router = useRouter()
     const [sending, setSending] = useState<boolean>(false)
-    const { data, error } = useSWR<Community[]>('/api/communities', fetcher)
-    if (error) return <div>Failed to load</div>
-    if (data){
-        let cities: { value: string; label: string }[] = Array.from(new Set(data.map((el) => (el.cities)).flat()))
-            .map((el: string) => ({ value: el, label: el }))
-        communityForm.inputs.map((input) => {
-            if (['cities'].indexOf(input.name) >= 0) input.options = cities;
-            return input
-        })
-    }
+    const [loadError, setLoadError] = useState<boolean>(false)
+    const supabase = createClient()
+
+    useEffect(() => {
+        supabase.from('communities').select('cities')
+            .then(({ data, error }) => {
+                if (error) { setLoadError(true); return; }
+                const cities: { value: string; label: string }[] = Array.from(
+                    new Set((data || []).map((el: any) => el.cities).flat().filter(Boolean))
+                ).map((el: string) => ({ value: el, label: el }));
+                communityForm.inputs.map((input) => {
+                    if (['cities'].indexOf(input.name) >= 0) input.options = cities;
+                    return input;
+                });
+            });
+    }, []);
+
+    if (loadError) return <div>Failed to load</div>
 
     const submit = async (fields: any): Promise<void> => {
         setSending(true)
-        let data: any = new Object;
-        Object.assign(data, fields)
-        data.cities = fields.cities.map((el: { value: string }) => el.value)
-        await fetch('/api/communities', { method: 'POST', body: JSON.stringify([data]), headers: { 'Content-Type': 'application/json' } })
-        await fetch('/api/build', { method: 'GET' })
+        const data: any = { ...fields };
+        data.cities = fields.cities.map((el: { value: string }) => el.value);
+        data.is_draft = true;
+        delete data.rgpd;
+        const { error } = await supabase.from('communities').insert(data);
+        if (error) { console.error('Submit error:', error); setSending(false); return; }
         router.push(`/`);
     }
 

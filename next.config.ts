@@ -5,12 +5,11 @@ const nextConfig: NextConfig = {
         remotePatterns: [
             {
                 protocol: 'https',
-                hostname: 'dl.airtable.com',
+                hostname: '*.supabase.co',
             },
         ],
     },
     transpilePackages: ['react-p5-wrapper'],
-    serverExternalPackages: ['better-sqlite3'],
 };
 
 export default nextConfig;

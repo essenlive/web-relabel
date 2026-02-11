@@ -3,7 +3,7 @@ import LabelStructure from '@components/LabelStructure';
 import styles from '@styles/pages/Embeds.module.css';
 import { getStructureForLabel, getAllStructureIds } from '@libs/data';
 
-export const revalidate = 1;
+export const revalidate = 60;
 
 export async function generateStaticParams(): Promise<{ id: string }[]> {
   return await getAllStructureIds();

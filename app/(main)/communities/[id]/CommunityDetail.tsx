@@ -28,12 +28,6 @@ export default function CommunityDetail({community}: CommunityDetailProps): Reac
     return (
         <Layout padded>
             <div className={styles.communityBanner}>
-                {community.id === "rec1PaAXbW2aQik2p" && (
-                    <div className={styles.illu}>
-                        <img src='/assets/JPO.jpg' />
-                    </div>
-                )}
-
                 <div className={styles.title}>
                     {community.name && (<h1> {community.id === "rec1PaAXbW2aQik2p" ? "25 juin Portes ouvertes des fabriques innovantes" : community.name} </h1>)}
                     {community.cities && (<h2>{community.cities.map((el: string, i: number) => (<span key={i}>{el}  </span>))}</h2>)}

@@ -2,7 +2,7 @@ import LabelCommunity from '@components/LabelCommunity';
 import styles from '@styles/pages/Embeds.module.css';
 import { getCommunity, getAllCommunityIds } from '@libs/data';
 
-export const revalidate = 1;
+export const revalidate = 60;
 
 export async function generateStaticParams(): Promise<{ id: string }[]> {
   return await getAllCommunityIds();

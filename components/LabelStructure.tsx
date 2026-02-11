@@ -13,9 +13,11 @@ interface LabelStructureProps {
 }
 
 export default function LabelStructure({ structure, bordered }: LabelStructureProps) {
-    (structure as any).data = {
-        projects : [structure.projects_designer.length, structure.projects_other.length, structure.projects_supplier.length, structure.projects_workshop.length],
-        memberships: (structure.communities as any[]).length
+    const projectCounts = Array.isArray(structure.data) ? structure.data : [0, 0, 0, 0];
+    const memberships = Array.isArray(structure.communities) ? structure.communities.length : 0;
+    const labelData = {
+        projects: projectCounts,
+        memberships,
     }
 
     const [width, setWidth] = useState<number>(400)
@@ -37,7 +39,7 @@ export default function LabelStructure({ structure, bordered }: LabelStructurePr
                 <h2 className={styles.name}>{structure.name && structure.name}</h2>
                 <div className={styles.adress}>{structure.adress && structure.adress}</div>
                 <div className={styles.sketch}>
-                    {(structure as any).data && ( <Sketch structure={structure}/> )}
+                    <Sketch structure={structure} labelData={labelData} />
                 </div>
             <div className={styles.communities}>
                 { structure.communities && ((structure.communities as any[]).map((community: any, i: number) => ( <h3 key={i}>{community.name}</h3>)))}
@@ -52,9 +54,10 @@ export default function LabelStructure({ structure, bordered }: LabelStructurePr
 
 interface SketchProps {
     structure: Partial<Structure>;
+    labelData: { projects: number[]; memberships: number };
 }
 
-const Sketch = ({ structure }: SketchProps) => {
+const Sketch = ({ structure, labelData }: SketchProps) => {
     function sketch(p5: any) {
 
 
@@ -65,11 +68,11 @@ const Sketch = ({ structure }: SketchProps) => {
         const y = x;
         const ep = width/8;
 
-        let [others, suppliers, designers, workshops] = (structure as any).data.projects;
+        let [others, suppliers, designers, workshops] = labelData.projects;
         let total = others + suppliers + designers + workshops;
         total = 15;
 
-        let comMemberships: number = (structure as any).data.memberships >= 4 ? 4 : (structure as any).data.memberships;
+        let comMemberships: number = labelData.memberships >= 4 ? 4 : labelData.memberships;
 
 
         let [c1, c2, c3, c4] = structure.colors && structure.colors.length >= 4 ? structure.colors : ["#D3494E", "#FFE5AD", "#13BBAF", "#7BC8F6"]

@@ -3,8 +3,8 @@ import { Formik } from 'formik';
 import Link from 'next/link'
 import classNames from 'classnames';
 import { useRouter } from 'next/navigation'
-import { useState } from 'react';
-import useSWR from 'swr'
+import { useState, useEffect } from 'react';
+import { createClient } from '@libs/supabase/client'
 import { structureForm } from '@libs/formsData';
 import Layout from '@components/Layout'
 import LabelStructure from '@components/LabelStructure';
@@ -13,33 +13,64 @@ import Tags from '@components/Tags';
 import styles from "@styles/pages/Form.module.css";
 import dynamic from 'next/dynamic'
 const Confetti = dynamic(() => import('react-confetti'), { ssr: false })
-const fetcher = (...args: [RequestInfo, RequestInit?]): Promise<any> => fetch(...args).then((res) => res.json())
 
 export default function AddStructureForm() {
     const router = useRouter()
     const [sending, setSending] = useState<boolean>(false)
-    const { data, error } = useSWR('/api/communities', fetcher)
-    if (error) return <div>Failed to load</div>
-    if (data) {
-        let communities = data.map((el: any) => ({ value: el.id, label: el.name }))
-        structureForm.inputs.map((input) => {
-            if (['communities'].indexOf(input.name) >= 0) input.options = communities;
-            return input
-        })
-    }
+    const [loadError, setLoadError] = useState<boolean>(false)
+    const supabase = createClient()
 
-    // Submit form handler
+    useEffect(() => {
+        supabase.from('communities').select('id, name')
+            .then(({ data, error }) => {
+                if (error) { setLoadError(true); return; }
+                const communities = (data || []).map((el: any) => ({ value: el.id, label: el.name }));
+                structureForm.inputs.map((input) => {
+                    if (['communities'].indexOf(input.name) >= 0) input.options = communities;
+                    return input;
+                });
+            });
+    }, []);
+
+    if (loadError) return <div>Failed to load</div>
+
     const submit = async (fields: any) => {
         setSending(true)
-        // Deep copy field object to keep it clean when submitting
-        let data: any = new Object;
-        Object.assign(data, fields)
-        data.communities = fields.communities.map((el: any) => el.value)
-        // Prepare illustrations Urls
-        data.illustrations = data.illustrations.map((el: string) => ({ "url": el }))
-        // Send to airtable and redirect to newly created page
-        await fetch('/api/structures', { method: 'POST', body: JSON.stringify([data]), headers: { 'Content-Type': 'application/json' } })
-        await fetch('/api/build', { method: 'GET' })
+        const data: any = { ...fields };
+
+        // Extract community selections for junction table
+        const communityIds = (data.communities || []).map((el: any) => typeof el === 'string' ? el : el.value);
+        delete data.communities;
+
+        data.is_draft = true;
+        delete data.rgpd;
+
+        // Geocode the address
+        if (data.adress) {
+            try {
+                const res = await fetch(`/api/geocode?q=${encodeURIComponent(data.adress)}`);
+                const coords = await res.json();
+                if (coords.longitude && coords.latitude) {
+                    data.longitude = coords.longitude;
+                    data.latitude = coords.latitude;
+                }
+            } catch (e) {
+                console.error('Geocoding failed:', e);
+            }
+        }
+
+        const { data: structure, error } = await supabase.from('structures').insert(data).select('id').single();
+        if (error) { console.error('Submit error:', error); setSending(false); return; }
+
+        // Insert community_structures relationships
+        if (communityIds.length > 0) {
+            const links = communityIds.map((communityId: string) => ({
+                community_id: communityId,
+                structure_id: structure.id,
+            }));
+            await supabase.from('community_structures').insert(links);
+        }
+
         router.push(`/`);
     }
 
@@ -96,10 +127,7 @@ export default function AddStructureForm() {
                                             name : props.values.name,
                                             adress : props.values.adress,
                                             communities : props.values.communities.map((el: any) => ({name: el.label})),
-                                            projects_designer: ["", "", ""],
-                                            projects_supplier: [""],
-                                            projects_workshop: ["", "", ""],
-                                            projects_other: ["", ""],
+                                            data: [3, 2, 1, 3],
                                             colors: props.values.colors
                                         }}
                                     />

@@ -2,9 +2,9 @@
 import { Formik } from 'formik';
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import classNames from 'classnames';
-import useSWR from 'swr'
+import { createClient } from '@libs/supabase/client'
 import dynamic from 'next/dynamic'
 const Confetti = dynamic(() => import('react-confetti'), { ssr: false })
 
@@ -16,29 +16,57 @@ import Tags from '@components/Tags';
 import { projectForm } from '@libs/formsData';
 import type { FormInput } from '../../../../types';
 
-const fetcher = (...args: any[]): Promise<any> => fetch(...(args as [RequestInfo, RequestInit?])).then((res) => res.json())
-
 export default function AddProjectForm(): React.JSX.Element {
     const [sending, setSending] = useState<boolean>(false)
+    const [loadError, setLoadError] = useState<boolean>(false)
     const router = useRouter()
-    const { data, error } = useSWR('/api/structures', fetcher)
+    const supabase = createClient()
 
-    if (error) return <div>Failed to load</div>
-    if (data) {
-        let structures = data.map((el: any) => ({ value: el.id, label: el.name }));
-        projectForm.inputs.map((input: FormInput) => {
-            if (['designers', 'suppliers', 'workshops', 'others'].indexOf(input.name) >= 0) input.options = structures;
-            return input
-        })
-    }
+    useEffect(() => {
+        supabase.from('structures').select('id, name').eq('is_draft', false)
+            .then(({ data, error }) => {
+                if (error) { setLoadError(true); return; }
+                const structures = (data || []).map((el: any) => ({ value: el.id, label: el.name }));
+                projectForm.inputs.map((input: FormInput) => {
+                    if (['designers', 'suppliers', 'workshops', 'others'].indexOf(input.name) >= 0) input.options = structures;
+                    return input;
+                });
+            });
+    }, []);
+
+    if (loadError) return <div>Failed to load</div>
 
     const submit = async (fields: any): Promise<void> => {
         setSending(true)
-        let data: any = new Object; Object.assign(data, fields)
-        data.team = fields.team.map((el: any) => el.value)
-        data.illustrations = data.illustrations.map((el: any) => ({ "url": el }))
-        await fetch('/api/projects', { method: 'POST', body: JSON.stringify([data]), headers: { 'Content-Type': 'application/json' } })
-        await fetch('/api/build', { method: 'GET' })
+        const data: any = { ...fields };
+        data.team = fields.team.map((el: any) => el.value);
+        data.is_draft = true;
+        delete data.rgpd;
+
+        // Extract structure selections for junction table
+        const designerIds = (data.designers || []).map((el: any) => typeof el === 'string' ? el : el.value);
+        const workshopIds = (data.workshops || []).map((el: any) => typeof el === 'string' ? el : el.value);
+        const supplierIds = (data.suppliers || []).map((el: any) => typeof el === 'string' ? el : el.value);
+        const otherIds = (data.others || []).map((el: any) => typeof el === 'string' ? el : el.value);
+        delete data.designers;
+        delete data.workshops;
+        delete data.suppliers;
+        delete data.others;
+
+        const { data: project, error } = await supabase.from('projects').insert(data).select('id').single();
+        if (error) { console.error('Submit error:', error); setSending(false); return; }
+
+        // Insert project_structures relationships
+        const links = [
+            ...designerIds.map((id: string) => ({ project_id: project.id, structure_id: id, role: 'designer' })),
+            ...workshopIds.map((id: string) => ({ project_id: project.id, structure_id: id, role: 'workshop' })),
+            ...supplierIds.map((id: string) => ({ project_id: project.id, structure_id: id, role: 'supplier' })),
+            ...otherIds.map((id: string) => ({ project_id: project.id, structure_id: id, role: 'other' })),
+        ];
+        if (links.length > 0) {
+            await supabase.from('project_structures').insert(links);
+        }
+
         router.push(`/`);
     }
 

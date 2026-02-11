@@ -1,10 +1,9 @@
 'use client';
 import styles from "@styles/components/Inputs.module.css";
 import { useField } from "formik";
-import { Widget as UploadcareWidget } from "@uploadcare/react-widget";
-const Widget = UploadcareWidget as any;
 import classNames from "classnames";
 import dynamic from 'next/dynamic'
+import { createClient } from '@libs/supabase/client';
 import type { FormInput } from '../types';
 
 const Select = dynamic(() => import('react-select'), { ssr: false })
@@ -99,19 +98,32 @@ export const Inputs = ({ input, ...props}: InputsProps) => {
                     />)
             break;
         case "images":
-            inputType = (<Widget
-                    publicKey='584b21c2b769b392a273'
-                    imageShrink="1024x1024"
-                    clearable
-                    locale="fr"
-                    previewStep='true'
-                    multiple='true'
-                    onChange={(info: any) => {
-                        let urls: string[] = [];
-                        for (let url = 0; url < info.count; url++) {
-                            urls.push(`${info.cdnUrl}nth/${url}/`)
+            inputType = (
+                <input
+                    type="file"
+                    accept="image/png,image/jpeg,image/webp"
+                    multiple
+                    className={styles.field__input}
+                    onChange={async (e) => {
+                        const files = e.target.files;
+                        if (!files || files.length === 0) return;
+                        const supabase = createClient();
+                        const urls: string[] = [];
+                        for (const file of Array.from(files)) {
+                            const filePath = `drafts/${Date.now()}-${file.name}`;
+                            const { data, error } = await supabase.storage
+                                .from('illustrations')
+                                .upload(filePath, file);
+                            if (error) {
+                                console.error('Upload error:', error);
+                                continue;
+                            }
+                            const { data: urlData } = supabase.storage
+                                .from('illustrations')
+                                .getPublicUrl(data.path);
+                            urls.push(urlData.publicUrl);
                         }
-                        setValue(urls)
+                        setValue([...field.value, ...urls]);
                     }}
                 />
             )
@@ -152,7 +164,6 @@ export const Inputs = ({ input, ...props}: InputsProps) => {
                     className={styles.field__input}
                     styles={{padding:"0 !important"} as any}
                     classNamePrefix="select"
-                    // value={options ? options.find(option => option.value === field.value) : ''}
                     isMulti
                     onChange={(values: any) => {setValue(values.map((el: any) => el.value))}}
                     onBlur={field.onBlur}
@@ -160,7 +171,7 @@ export const Inputs = ({ input, ...props}: InputsProps) => {
                 />)
             break;
         default:
-            console.log(`❌ Unsupported input (${type})`);
+            console.log(`Unsupported input (${type})`);
             inputType = ``;
     }
 return (
