@@ -1,7 +1,10 @@
 import "@styles/globals/globals.css";
 import "@styles/globals/map.css";
 import type { Metadata } from 'next';
+import { Barlow } from 'next/font/google';
 import { SITE_URL } from '@libs/site';
+
+const barlow = Barlow({ subsets: ['latin'], weight: ['200', '300', '400', '500', '600', '700', '800', '900'], variable: '--font-barlow', display: 'swap' });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -16,9 +19,8 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const umami = process.env.NEXT_PUBLIC_UMAMI ? JSON.parse(process.env.NEXT_PUBLIC_UMAMI) as { id: string; url: string } : null;
   return (
-    <html lang="fr">
+    <html lang="fr" className={barlow.variable}>
       <body>
         {children}
       </body>
