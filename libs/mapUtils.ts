@@ -3,7 +3,12 @@ import type { Structure, GeoJSONFeature, GeoJSONFeatureCollection } from '../typ
 export function prepareData(structureList: Structure[]): GeoJSONFeatureCollection {
   const data: Record<string, GeoJSONFeature> = {}
   structureList.forEach((el) => {
-    const hash = `lo-${el.longitude}la-${el.latitude}`
+    if (el.longitude == null || el.latitude == null) return;
+    const lng = Number(el.longitude);
+    const lat = Number(el.latitude);
+    if (!isFinite(lng) || !isFinite(lat)) return;
+
+    const hash = `lo-${lng}la-${lat}`
     if (!data[hash]) {
       data[hash] = {
         type: "Feature",
@@ -14,7 +19,7 @@ export function prepareData(structureList: Structure[]): GeoJSONFeatureCollectio
         id: hash,
         geometry: {
           type: "Point",
-          coordinates: [el.longitude, el.latitude, 0]
+          coordinates: [lng, lat, 0]
         }
       }
     }

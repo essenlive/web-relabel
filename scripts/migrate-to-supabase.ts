@@ -8,7 +8,7 @@
  *
  * Prerequisites:
  *   - Supabase tables created (run supabase/migrations/001_initial.sql first)
- *   - SUPABASE_SERVICE_ROLE_KEY and NEXT_PUBLIC_SUPABASE_URL set in .env.local
+ *   - SUPABASE_SECRET_KEY and NEXT_PUBLIC_SUPABASE_URL set in .env.local
  *   - SQLite export at data_exports/airtable-export.sqlite
  */
 
@@ -21,7 +21,7 @@ import * as crypto from 'crypto';
 
 const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!, // Use service role for admin access (bypasses RLS)
+    process.env.SUPABASE_SECRET_KEY!, // Use secret key for admin access (bypasses RLS)
 );
 
 const dbPath = path.join(process.cwd(), 'data_exports', 'airtable-export.sqlite');

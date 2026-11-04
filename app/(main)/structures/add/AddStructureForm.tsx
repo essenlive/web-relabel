@@ -59,14 +59,16 @@ export default function AddStructureForm() {
             }
         }
 
-        const { data: structure, error } = await supabase.from('structures').insert(data).select('id').single();
+        const structureId = crypto.randomUUID();
+        data.id = structureId;
+        const { error } = await supabase.from('structures').insert(data);
         if (error) { console.error('Submit error:', error); setSending(false); return; }
 
         // Insert community_structures relationships
         if (communityIds.length > 0) {
             const links = communityIds.map((communityId: string) => ({
                 community_id: communityId,
-                structure_id: structure.id,
+                structure_id: structureId,
             }));
             await supabase.from('community_structures').insert(links);
         }

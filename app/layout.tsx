@@ -1,9 +1,9 @@
 import "@styles/globals/globals.css";
-import "@styles/globals/theme.css";
 import "@styles/globals/map.css";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'),
   title: 'Re-Label',
   description: 'Un outils collaboratif qui recense et partage',
   icons: { icon: '/Favicon.png' },
@@ -20,7 +20,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="fr">
       <body>
         {children}
-        {umami && <script async defer data-website-id={umami.id} src={umami.url}></script>}
       </body>
     </html>
   );

@@ -40,3 +40,5 @@ yarn-error.log*
 
 *.todo
 .env.local
+
+*.tsbuildinfo

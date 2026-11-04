@@ -53,15 +53,17 @@ export default function AddProjectForm(): React.JSX.Element {
         delete data.suppliers;
         delete data.others;
 
-        const { data: project, error } = await supabase.from('projects').insert(data).select('id').single();
+        const projectId = crypto.randomUUID();
+        data.id = projectId;
+        const { error } = await supabase.from('projects').insert(data);
         if (error) { console.error('Submit error:', error); setSending(false); return; }
 
         // Insert project_structures relationships
         const links = [
-            ...designerIds.map((id: string) => ({ project_id: project.id, structure_id: id, role: 'designer' })),
-            ...workshopIds.map((id: string) => ({ project_id: project.id, structure_id: id, role: 'workshop' })),
-            ...supplierIds.map((id: string) => ({ project_id: project.id, structure_id: id, role: 'supplier' })),
-            ...otherIds.map((id: string) => ({ project_id: project.id, structure_id: id, role: 'other' })),
+            ...designerIds.map((id: string) => ({ project_id: projectId, structure_id: id, role: 'designer' })),
+            ...workshopIds.map((id: string) => ({ project_id: projectId, structure_id: id, role: 'workshop' })),
+            ...supplierIds.map((id: string) => ({ project_id: projectId, structure_id: id, role: 'supplier' })),
+            ...otherIds.map((id: string) => ({ project_id: projectId, structure_id: id, role: 'other' })),
         ];
         if (links.length > 0) {
             await supabase.from('project_structures').insert(links);

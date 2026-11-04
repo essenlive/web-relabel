@@ -1,12 +1,21 @@
 'use client';
 import Layout from '@components/Layout'
-import styles from "@styles/pages/Structures.module.css";
 import Link from 'next/link'
 import ReactMap from '@components/ReactMap'
 import { prepareData } from '@libs/mapUtils'
-import { useState } from 'react';
-import Tags from '@components/Tags';
+import { useState, useMemo } from 'react';
+import { cn } from '@libs/utils';
+import { FiX, FiFilter } from 'react-icons/fi';
 import type { Structure, Community } from '../../../types';
+
+const TYPOLOGIES = [
+  { key: 'designer', label: 'Designers', color: '#D3494E' },
+  { key: 'stockage', label: 'Fournisseurs', color: '#13BBAF' },
+  { key: 'atelier', label: 'Ateliers', color: '#FFE5AD' },
+  { key: 'autre', label: 'Partenaires', color: '#7BC8F6' },
+] as const;
+
+const COLORS = TYPOLOGIES.map(t => t.color);
 
 interface StructuresClientProps {
   structures: Structure[];
@@ -14,103 +23,169 @@ interface StructuresClientProps {
 }
 
 export default function StructuresClient({ structures, communities: rawCommunities }: StructuresClientProps) {
-  const communities: string[] = rawCommunities.map((el: Community) => el.name);
-  const [typologyFilter, setTypologyFilter] = useState<Set<string>>(new Set(["designer", "stockage", "atelier", "autre"]))
-  const [communityFilter, setCommunityFilter] = useState<Set<string>>(new Set(communities))
-  const [filteredStructures, setFilteredStructures] = useState<Structure[]>(filterStructures())
-  const colors: string[] = ["#D3494E", "#FFE5AD", "#13BBAF", "#7BC8F6"];
-  const colorMap = new Map<string, string>()
-  colorMap.set('designer', colors[0]);
-  colorMap.set('atelier', colors[1]);
-  colorMap.set('stockage', colors[2]);
-  colorMap.set('autre', colors[3]);
+  const communityNames = rawCommunities.map((el) => el.name);
+  const [activeTypologies, setActiveTypologies] = useState<Set<string>>(new Set(TYPOLOGIES.map(t => t.key)));
+  const [activeCommunities, setActiveCommunities] = useState<Set<string>>(new Set(communityNames));
+  const [panelOpen, setPanelOpen] = useState(true);
 
-  function filterStructures(): Structure[] {
-    let filteredStructures = structures.filter((structure) => {
-      let typologyCheck = false;
-      let communityCheck = false;
-      structure.typologies.forEach(typology => { if (typologyFilter.has(typology)) typologyCheck = true });
-      (structure.communities as Community[]).forEach(community => { if (communityFilter.has(community.name)) communityCheck = true });
-      return typologyCheck && communityCheck
-    })
-    return(filteredStructures)
+  const filteredStructures = useMemo(() => {
+    return structures.filter((s) => {
+      const typMatch = s.typologies.some(t => activeTypologies.has(t));
+      const comMatch = (s.communities as Community[]).some(c => activeCommunities.has(c.name));
+      return typMatch && comMatch;
+    });
+  }, [structures, activeTypologies, activeCommunities]);
+
+  function toggleTypology(key: string) {
+    setActiveTypologies(prev => {
+      const next = new Set(prev);
+      next.has(key) ? next.delete(key) : next.add(key);
+      return next;
+    });
   }
 
-  function toggleFilter(selection: string, filter: Set<string>): Set<string> {
-    if (filter.has(selection)) { filter.delete(selection) }
-    else (filter.add(selection))
-    return(filter);
+  function toggleCommunity(name: string) {
+    setActiveCommunities(prev => {
+      const next = new Set(prev);
+      next.has(name) ? next.delete(name) : next.add(name);
+      return next;
+    });
   }
 
-  return <Layout full>
-    <ReactMap
-      className={styles.map}
-      structures={prepareData(filteredStructures)}
-      colorMap={colors}
-      initialViewport={{
-        latitude: 48.85658,
-        longitude: 2.3518,
-        zoom: 4
-      }}
-    />
-    <div className={styles.infos}>
-      <h3>Filtres</h3>
-      <div className={styles.filters}>
-        <div className={styles.filter}>
-          <h4>Typologies</h4>
-          <ul>
-            <li onClick={() => { setTypologyFilter(toggleFilter("designer", typologyFilter)); setFilteredStructures(filterStructures()) }}>
-              <span className={styles.legend} style={typologyFilter.has("designer") ? { backgroundColor: colors[0], borderColor: colors[0] } : {}}></span> Designers
-            </li>
-            <li onClick={() => { setTypologyFilter(toggleFilter("stockage", typologyFilter)); setFilteredStructures(filterStructures()) }}>
-              <span className={styles.legend} style={typologyFilter.has("stockage") ? { backgroundColor: colors[1], borderColor: colors[1] } : {}}></span> Ateliers
-            </li>
-            <li onClick={() => { setTypologyFilter(toggleFilter("atelier", typologyFilter)); setFilteredStructures(filterStructures()) }}>
-              <span className={styles.legend} style={typologyFilter.has("atelier") ? { backgroundColor: colors[2], borderColor: colors[2] } : {}}></span> Fournisseurs
-            </li>
-            <li onClick={() => { setTypologyFilter(toggleFilter("autre", typologyFilter)); setFilteredStructures(filterStructures()) }}>
-              <span className={styles.legend} style={typologyFilter.has("autre") ? { backgroundColor: colors[3], borderColor: colors[3] } : {}}></span> Partenaires
-            </li>
-            <li onClick={() => { setTypologyFilter(typologyFilter.add("designer").add("atelier").add("stockage").add("autre")); setFilteredStructures(filterStructures()) }}>
-              <span className={styles.legend} style={typologyFilter.size === 4 ? { backgroundColor: "var(--gray-300)" } : {}}></span>Tout afficher
-            </li>
-          </ul>
+  function showAll() {
+    setActiveTypologies(new Set(TYPOLOGIES.map(t => t.key)));
+  }
+
+  return (
+    <Layout full>
+      <ReactMap
+        className="absolute inset-0 w-full h-full"
+        structures={prepareData(filteredStructures)}
+        colorMap={COLORS}
+        initialViewport={{ latitude: 46.6, longitude: 2.5, zoom: 5.5 }}
+      />
+
+      {/* Toggle button when panel is closed */}
+      {!panelOpen && (
+        <button
+          onClick={() => setPanelOpen(true)}
+          className="absolute z-10 right-3 top-28 bg-white border-[3px] border-primary px-3 py-2 font-bold text-sm uppercase text-primary shadow-lg flex items-center gap-2 cursor-pointer hover:bg-gray-50 transition-colors"
+        >
+          <FiFilter className="w-4 h-4" />
+          Filtres
+        </button>
+      )}
+
+      {/* Sidebar panel */}
+      <div className={cn(
+        "absolute z-10 right-3 top-28 bottom-3 flex flex-col",
+        "bg-white/95 backdrop-blur-sm border-[3px] border-primary shadow-lg",
+        "w-80 max-md:w-[calc(100%-1.5rem)] max-md:left-3",
+        "transition-all duration-200",
+        panelOpen ? "opacity-100 translate-x-0" : "opacity-0 pointer-events-none translate-x-4"
+      )}>
+        {/* Header */}
+        <div className="flex items-center justify-between px-3 py-2 border-b-[3px] border-primary shrink-0">
+          <h3 className="text-sm font-bold uppercase tracking-wide">Filtres</h3>
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-quaternary">{filteredStructures.length} structures</span>
+            <button onClick={() => setPanelOpen(false)} className="cursor-pointer text-primary hover:opacity-70 transition-opacity">
+              <FiX className="w-4 h-4" />
+            </button>
+          </div>
         </div>
-        <div className={styles.filter}>
-          <h4>Communautés</h4>
-          <ul>
-            {communities.map((community: string, i: number) => {
-              return (
-                <li key={i} onClick={() => { setCommunityFilter(toggleFilter(community, communityFilter)); setFilteredStructures(filterStructures()) }}>
-                  <span className={styles.legend} style={communityFilter.has(community) ? { backgroundColor: "var(--gray-300)" } : {}}></span>
-                  {community}
-                </li>
-              )
-            })}
-          </ul>
+
+        {/* Typology filters */}
+        <div className="px-3 py-2 border-b border-gray-200 shrink-0">
+          <div className="flex flex-wrap gap-1.5">
+            {TYPOLOGIES.map((t) => (
+              <button
+                key={t.key}
+                onClick={() => toggleTypology(t.key)}
+                className={cn(
+                  "px-2.5 py-1 text-xs font-semibold rounded-full border-2 transition-all cursor-pointer",
+                  activeTypologies.has(t.key)
+                    ? "text-white shadow-sm"
+                    : "border-gray-200 text-gray-400 bg-white hover:border-gray-300"
+                )}
+                style={activeTypologies.has(t.key) ? { backgroundColor: t.color, borderColor: t.color } : {}}
+              >
+                {t.label}
+              </button>
+            ))}
+            <button
+              onClick={showAll}
+              className="px-2.5 py-1 text-xs font-semibold rounded-full border-2 border-gray-300 text-primary bg-white hover:bg-gray-50 cursor-pointer transition-colors"
+            >
+              Tout
+            </button>
+          </div>
         </div>
-      </div>
-      <div className={styles.add}>
-        <Link href={{ pathname: '/structures/add' }}>
-          <p className='link-simple'>Réferencer votre structure</p>
-        </Link>
-      </div>
-      <div className={styles.list}>
-        {filteredStructures.map((structure: Structure, i: number) => {
-          return(
-            <div className={styles.listItem} key={i}>
-              <div className={styles.listItemInfo}>
-                <h4> {structure.name} </h4>
-                <Tags tags={structure.typologies} colorMap={colorMap}/>
-                <Link href={{ pathname: `/structures/${structure.id}` }}>
-                  <p className='link'>Voir la structure</p>
-                </Link>
-              </div>
-              {structure.illustrations[0] && (<img src={structure.illustrations[0]}/>)}
+
+        {/* Community filters */}
+        {communityNames.length > 0 && (
+          <div className="px-3 py-2 border-b border-gray-200 shrink-0">
+            <div className="flex flex-wrap gap-1">
+              {communityNames.map((name) => (
+                <button
+                  key={name}
+                  onClick={() => toggleCommunity(name)}
+                  className={cn(
+                    "px-2 py-0.5 text-[11px] font-medium rounded-full border transition-all cursor-pointer",
+                    activeCommunities.has(name)
+                      ? "bg-primary text-white border-primary"
+                      : "border-gray-200 text-gray-400 bg-white hover:border-gray-300"
+                  )}
+                >
+                  {name}
+                </button>
+              ))}
             </div>
-          )
-        })}
+          </div>
+        )}
+
+        {/* Add link */}
+        <Link
+          href="/structures/add"
+          className="block px-3 py-1.5 text-xs font-semibold text-center text-white bg-primary hover:opacity-90 transition-opacity shrink-0"
+        >
+          Référencer votre structure
+        </Link>
+
+        {/* Structure list */}
+        <div className="flex-1 overflow-y-auto">
+          {filteredStructures.map((structure) => (
+            <Link
+              key={structure.id}
+              href={`/structures/${structure.id}`}
+              className="flex items-center gap-2.5 px-3 py-2 border-b border-gray-100 hover:bg-gray-50/80 transition-colors"
+            >
+              {structure.illustrations[0] && (
+                <img
+                  src={structure.illustrations[0]}
+                  alt={structure.name}
+                  className="w-9 h-9 rounded object-cover shrink-0 bg-gray-100"
+                />
+              )}
+              <div className="flex-1 min-w-0">
+                <h4 className="text-xs font-bold truncate leading-tight">{structure.name}</h4>
+                <div className="flex flex-wrap gap-0.5 mt-0.5">
+                  {structure.typologies.map((tag) => {
+                    const typo = TYPOLOGIES.find(t => t.key === tag);
+                    return (
+                      <span
+                        key={tag}
+                        className="w-2 h-2 rounded-full inline-block"
+                        style={{ backgroundColor: typo?.color ?? '#999' }}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
       </div>
-    </div>
-  </Layout>;
+    </Layout>
+  );
 }

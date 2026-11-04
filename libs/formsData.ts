@@ -560,7 +560,7 @@ const structureInputs: FormInput[] = [
     },
     {
         name: "communities",
-        schema: Yup.array().of(Yup.object().nullable()).required('Requis'),
+        schema: Yup.array().of(Yup.string()).required('Requis'),
         type: "multiSelect",
         initial: [],
         placeholder: "",

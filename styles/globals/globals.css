@@ -1,84 +1,175 @@
-@import "normalize.css/normalize.css";
+@import url('https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto+Slab:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
 
-html, body {
-  padding: 0;
-  margin: 0;
-  font-family: var(--font-body);
-  box-sizing: border-box;
-  font-weight: 400;
-  color: var(--primary);
-  font-size: var(--fontSize-base);
-  forced-color-adjust: exact !important;
-}
 
-.link {
-  font-weight: 600;
-  position: relative;
-  text-decoration: underline;
-  text-decoration-thickness: 3px;
-  cursor: pointer;
-}
+/* ─────────────────────────────────────────────
+   Tailwind Theme — generates utility classes
+   (text-primary, bg-primary, font-header, etc.)
+   ───────────────────────────────────────────── */
 
-.link-simple {
-  font-weight: 400;
-  position: relative;
-  cursor: pointer;
+@theme {
+  --font-header: 'Barlow', "Segoe UI", 'Roboto', "Helvetica Neue", 'Arial', sans-serif;
+  --font-body: 'Barlow', "Segoe UI", 'Roboto', "Helvetica Neue", 'Arial', sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  --color-primary: #355c7d;
+  --color-tertiary: #b2675e;
+  --color-quaternary: #7a7a7a;
 }
 
 
+/* ─────────────────────────────────────────────
+   CSS Variables — backward compat for CSS Modules
+   that use var(--primary), var(--borderWidth-lg), etc.
+   ───────────────────────────────────────────── */
 
-.link-simple a, .link-simple a:visited,
-.link a, .link a:visited {
-  color: inherit;
+:root {
+  /* Colors */
+  --primary: var(--color-primary);
+  --tertiary: var(--color-tertiary);
+  --quaternary: var(--color-quaternary);
+  --white: #fff;
+  --black: #000;
+  --gray-100: #f4f4f5;
+  --gray-200: #e4e4e7;
+  --gray-300: #d4d4d8;
+  --coolGray-100: #f3f4f6;
+  --red-700: #b91c1c;
+
+  /* Font sizes */
+  --fontSize-2xs: 0.5rem;
+  --fontSize-xs: 0.75rem;
+  --fontSize-sm: 0.875rem;
+  --fontSize-base: 1.05rem;
+  --fontSize-lg: 1.125rem;
+  --fontSize-xl: 1.25rem;
+  --fontSize-2xl: 1.5rem;
+  --fontSize-3xl: 1.875rem;
+  --fontSize-4xl: 2.25rem;
+  --fontSize-5xl: 3rem;
+  --fontSize-6xl: 3.75rem;
+  --fontSize-7xl: 4.5rem;
+  --fontSize-8xl: 6rem;
+  --fontSize-9xl: 8rem;
+
+  /* Border widths */
+  --borderWidth: 1px;
+  --borderWidth-sm: 0px;
+  --borderWidth-md: 2px;
+  --borderWidth-lg: 4px;
+  --borderWidth-xl: 8px;
+  --borderWidth-2xl: 12px;
+
+  /* Box shadows */
+  --boxShadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --boxShadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --boxShadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --boxShadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --boxShadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --boxShadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --boxShadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+  --boxShadow-none: none;
 }
 
-.link-simple:hover,
-.link:hover {
-  opacity: 0.8;
-  text-decoration: underline;
-  text-decoration-thickness: 3px;
 
+/* ─────────────────────────────────────────────
+   Base — element-level defaults
+   ───────────────────────────────────────────── */
+
+@layer base {
+  html, body {
+    font-family: var(--font-body);
+    font-weight: 400;
+    color: var(--color-primary);
+    font-size: var(--fontSize-base);
+    forced-color-adjust: exact !important;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-header);
+    font-weight: 700;
+    color: var(--color-primary);
+    text-transform: uppercase;
+    line-height: 1;
+  }
+
+  strong {
+    font-weight: 600;
+  }
+
+  button {
+    background: none;
+    border: none;
+    color: inherit;
+    text-align: inherit;
+    cursor: pointer;
+  }
+
+  /* Restore form element defaults reset by Tailwind preflight */
+  input, textarea, select {
+    background-color: transparent;
+    color: inherit;
+    font: inherit;
+  }
+
+  input:focus, textarea:focus, select:focus {
+    outline: none;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: inherit;
+  }
 }
 
-.button {
-  background: var(--white);
-  padding: 0.5rem 1rem;
-  border: var(--primary) solid var(--borderWidth-lg);
-  cursor: pointer;
+
+/* ─────────────────────────────────────────────
+   Components — reusable class-based patterns
+   ───────────────────────────────────────────── */
+
+@layer components {
+  .link {
+    font-weight: 600;
+    position: relative;
+    text-decoration: underline;
+    text-decoration-thickness: 3px;
+    cursor: pointer;
+  }
+
+  .link-simple {
+    font-weight: 400;
+    position: relative;
+    cursor: pointer;
+  }
+
+  .link-simple a, .link-simple a:visited,
+  .link a, .link a:visited {
+    color: inherit;
+  }
+
+  .link-simple:hover,
+  .link:hover {
+    opacity: 0.8;
+    text-decoration: underline;
+    text-decoration-thickness: 3px;
+  }
+
+  .button {
+    background: var(--white);
+    padding: 0.5rem 1rem;
+    border: var(--primary) solid var(--borderWidth-lg);
+    cursor: pointer;
+  }
+
+  .button:hover {
+    background: var(--coolGray-100);
+  }
 }
 
-.button:hover {
-  background: var(--coolGray-100);
-}
 
-
-button {
-  background: none;
-  border: none;
-  color: inherit;
-  text-align: inherit;
-  cursor: pointer;
-}
-
-strong {
-  font-weight: 600;
-}
-
-*, *::before, *::after {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-}
-
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-header);
-  font-weight: 700;
-  color: var(--primary);
-  text-transform: uppercase;
-  margin: 0;
-  padding: 0;
-  line-height: 1;
-}
+/* ─────────────────────────────────────────────
+   Third-party overrides (react-select)
+   ───────────────────────────────────────────── */
 
 .select__control {
   border: none !important;
@@ -94,9 +185,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 
-
-
-
+/* ─────────────────────────────────────────────
+   Print
+   ───────────────────────────────────────────── */
 
 @media print {
   html, body {
