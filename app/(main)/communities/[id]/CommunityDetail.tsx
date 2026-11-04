@@ -1,4 +1,5 @@
 'use client';
+import { SITE_HOST, SITE_URL, iframeCode, pageUrl } from '@libs/site';
 import Layout from '@components/Layout'
 import classNames from "classnames"
 import styles from "@styles/pages/SinglePage.module.css";
@@ -97,25 +98,25 @@ export default function CommunityDetail({community}: CommunityDetailProps): Reac
                 <div className={styles.share}>
                     <h2>Share</h2>
                     <div className={styles.sharing}>
-                        <EmailShareButton url={`https://re-label.eu/communities/${community.id}`} subject={'Mon Re-Label'} body={'Je viens de faire mon Re-label sur : '}>
+                        <EmailShareButton url={pageUrl(`/communities/${community.id}`)} subject={'Mon Re-Label'} body={'Je viens de faire mon Re-label sur : '}>
                             <EmailIcon size={32} round={true} />
                         </EmailShareButton>
-                        <FacebookShareButton url={`https://re-label.eu/communities/${community.id}`} hashtag={'relabel'}>
+                        <FacebookShareButton url={pageUrl(`/communities/${community.id}`)} hashtag={'relabel'}>
                             <FacebookIcon size={32} round={true} />
                         </FacebookShareButton>
-                        <LinkedinShareButton url={`https://re-label.eu/communities/${community.id}`} title={'Mon Re-Label'} summary={'Je viens de faire mon Re-label sur re-label.eu'} source={'https://re-label.eu'}>
+                        <LinkedinShareButton url={pageUrl(`/communities/${community.id}`)} title={'Mon Re-Label'} summary={`Je viens de faire mon Re-label sur ${SITE_HOST}`} source={SITE_URL}>
                             <LinkedinIcon size={32} round={true} />
                         </LinkedinShareButton>
-                        <TwitterShareButton url={`https://re-label.eu/communities/${community.id}`} title={'Mon Re-Label'} hashtags={['relabel']}>
+                        <TwitterShareButton url={pageUrl(`/communities/${community.id}`)} title={'Mon Re-Label'} hashtags={['relabel']}>
                             <TwitterIcon size={32} round={true} />
                         </TwitterShareButton>
                     </div>
 
                     <div className={styles.embed}>
-                        <span onClick={() => { addToClipboard(`<iframe src="https://re-label.eu/communities/label/${community.id}" name="relabel" scrolling="no" frameborder="0" marginheight="0px" marginwidth="0px" height="300px" width="240px" allowfullscreen></iframe>`) }}>
+                        <span onClick={() => { addToClipboard(iframeCode(`/communities/label/${community.id}`)) }}>
                             <BiCopy /> {copied ? "Ajout\u00e9 au clipboard !" : "Integrer \u00e0 votre site"}
                         </span>
-                        <textarea readOnly value={`<iframe src="https://re-label.eu/communities/label/${community.id}" name="relabel" scrolling="no" frameborder="0" marginheight="0px" marginwidth="0px" height="300px" width="240px" allowfullscreen></iframe>`} />
+                        <textarea readOnly value={iframeCode(`/communities/label/${community.id}`)} />
                     </div>
                 </div>
             </div>

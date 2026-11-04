@@ -41,7 +41,7 @@ On the other hand you have all the tools of javascript.
 
 ## Deployment
 
-The website will be automatically deployed [here](http://relabel.vercel.app/) on each pushed commit if the build is successful.
+The website will be automatically deployed [here](https://relabel.essenlive.xyz) on each pushed commit (Netlify) if the build is successful.
 
 
 ## Tools documentation

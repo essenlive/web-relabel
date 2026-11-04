@@ -1,4 +1,5 @@
 'use client';
+import { SITE_HOST, pageUrl } from '@libs/site';
 import { forwardRef } from "react";
 import type { Project, Structure } from '../types';
 import LabelProject from '@components/LabelProject';
@@ -35,11 +36,11 @@ const Certificate = forwardRef<HTMLDivElement, CertificateProps>(({project}, ref
                     <div className={styles.project}>
                         <h1>Le projet </h1>
                         {project.description && (<p> {project.description} </p>)}
-                        <p>Retrouver toute l'histoire du projet sur <span className="link">re-label.eu</span></p>
+                        <p>Retrouver toute l'histoire du projet sur <span className="link">{SITE_HOST}</span></p>
                     </div>
                     <div className={styles.share}>
                         <QRCanvas
-                            text={`https://re-label.eu/projects/${project.id}`}
+                            text={pageUrl(`/projects/${project.id}`)}
                             options={{
                                 errorCorrectionLevel: 'L',
                                 margin: 2,

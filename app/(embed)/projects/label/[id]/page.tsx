@@ -1,3 +1,4 @@
+import { pageUrl } from '@libs/site';
 import LabelProject from '@components/LabelProject';
 import styles from '@styles/pages/Embeds.module.css';
 import { getProjectForLabel, getAllProjectIds } from '@libs/data';
@@ -14,7 +15,7 @@ export default async function ProjectLabelPage({ params }: { params: Promise<{ i
   const project: Project = await getProjectForLabel(id);
   return (
     <div className={styles.embed}>
-      <a href={`https://re-label.eu/projects/${project.id}`} target={"_parent"}></a>
+      <a href={pageUrl(`/projects/${project.id}`)} target={"_parent"}></a>
       <LabelProject project={project} bordered />
     </div>
   );

@@ -1,9 +1,10 @@
 import "@styles/globals/globals.css";
 import "@styles/globals/map.css";
 import type { Metadata } from 'next';
+import { SITE_URL } from '@libs/site';
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'),
+  metadataBase: new URL(SITE_URL),
   title: 'Re-Label',
   description: 'Un outils collaboratif qui recense et partage',
   icons: { icon: '/Favicon.png' },

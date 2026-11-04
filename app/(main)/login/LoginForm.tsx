@@ -42,7 +42,7 @@ export default function LoginForm() {
                             type="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            placeholder="admin@re-label.eu"
+                            placeholder="admin@essenlive.xyz"
                             required
                             style={{ width: '100%', padding: '0.5rem', marginBottom: '1rem' }}
                         />

@@ -1,4 +1,5 @@
 'use client';
+import { SITE_HOST, SITE_URL, iframeCode, pageUrl } from '@libs/site';
 import Layout from '@components/Layout'
 import classNames from 'classnames';
 import styles from "@styles/pages/SinglePage.module.css";
@@ -83,28 +84,28 @@ export default function StructureDetail({ structure }: StructureDetailProps) {
                     <div className={styles.sharing}>
 
                         <EmailShareButton
-                            url={`https://re-label.eu/structures/${structure.id}`}
+                            url={pageUrl(`/structures/${structure.id}`)}
                             subject={'Mon Re-Label'}
                             body={'Je viens de faire mon Re-label sur : '}
                         >
                             <EmailIcon size={32} round={true} />
                         </EmailShareButton>
                         <FacebookShareButton
-                            url={`https://re-label.eu/structures/${structure.id}`}
+                            url={pageUrl(`/structures/${structure.id}`)}
                             hashtag={'#relabel'}
                         >
                             <FacebookIcon size={32} round={true} />
                         </FacebookShareButton>
                         <LinkedinShareButton
-                            url={`https://re-label.eu/structures/${structure.id}`}
+                            url={pageUrl(`/structures/${structure.id}`)}
                             title={'Mon Re-Label'}
-                            summary={'Je viens de faire mon Re-label sur re-label.eu'}
-                            source={'https://re-label.eu'}
+                            summary={`Je viens de faire mon Re-label sur ${SITE_HOST}`}
+                            source={SITE_URL}
                         >
                             <LinkedinIcon size={32} round={true} />
                         </LinkedinShareButton>
                         <TwitterShareButton
-                            url={`https://re-label.eu/structures/${structure.id}`}
+                            url={pageUrl(`/structures/${structure.id}`)}
                             title={'Mon Re-Label'}
                             hashtags={['relabel']}
                         >
@@ -113,10 +114,10 @@ export default function StructureDetail({ structure }: StructureDetailProps) {
                     </div>
 
                     <div className={styles.embed}>
-                        <span onClick={() => { addToClipboard(`<iframe src="https://re-label.eu/structures/label/${structure.id}" name="relabel" scrolling="no" frameborder="0" marginheight="0px" marginwidth="0px" height="300px" width="240px" allowfullscreen></iframe>`) }}>
+                        <span onClick={() => { addToClipboard(iframeCode(`/structures/label/${structure.id}`)) }}>
                             <BiCopy/> {copied ? "Ajouté au clipboard !" : "Integrer à votre site"}
                         </span>
-                        <textarea readOnly value={`<iframe src="https://re-label.eu/structures/label/${structure.id}" name="relabel" scrolling="no" frameborder="0" marginheight="0px" marginwidth="0px" height="300px" width="240px" allowfullscreen></iframe>`} />
+                        <textarea readOnly value={iframeCode(`/structures/label/${structure.id}`)} />
                     </div>
                 </div>
 
