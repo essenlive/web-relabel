@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useRef, useCallback } from 'react';
-import ReactMapGL, { Popup, Source, Layer } from 'react-map-gl';
+import ReactMapGL, { Popup, Source, Layer } from 'react-map-gl/mapbox';
 import styles from "@styles/pages/Structures.module.css";
 import Link from 'next/link';
 import { clusterLayer, clusterCountLayer, unclusteredPointLayer, workshopsLayer, othersLayer, suppliersLayer, designersLayer } from '@libs/layers';
