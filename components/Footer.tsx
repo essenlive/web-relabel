@@ -1,3 +1,4 @@
+import SmartImage from '@components/SmartImage';
 import Link from 'next/link';
 
 function FooterSection({ title, children, className }: { title: string; children: React.ReactNode; className?: string }) {
@@ -17,12 +18,12 @@ export default function Footer() {
         <div className="w-[55%] py-4 max-md:w-full *:py-2">
           <h2 className="text-primary leading-none uppercase font-black text-3xl">A propos</h2>
           <p>
-            Le projet <strong>RE-label</strong> est porté à Paris dans le cadre du projet ReFlow, par l&apos;équipe de Ars Longa. Si vous avez des questions, des suggestions ou autre, contactez nous directement à <Link href="mailto:info@arslonga.fr"><span className="link">info@arslonga.fr</span></Link>
+            Le projet <strong>Re-Label</strong> est porté à Paris dans le cadre du projet ReFlow, par l&apos;équipe de Ars Longa. Si vous avez des questions, des suggestions ou autre, contactez nous directement à <Link href="mailto:info@arslonga.fr"><span className="link">info@arslonga.fr</span></Link>
           </p>
           <div className="flex flex-row justify-between mt-6 p-4 gap-4">
-            <img className="w-1/2 min-w-62.5 h-20 object-contain" src='/assets/horizon2020_logo_black.png' alt='logo h2020' />
-            <img className="w-1/4 h-20 object-contain" src='/assets/reflow.png' alt='logo reflow' />
-            <img className="w-1/4 h-20 object-contain" src='/assets/LOGO AL couleurs.png' alt='logo ars longa' />
+            <SmartImage className="w-1/2 min-w-62.5 h-20 object-contain" src="/assets/horizon2020_logo_black.png" alt="Horizon 2020" width={2420} height={423} />
+            <SmartImage className="w-1/4 h-20 object-contain" src="/assets/reflow.png" alt="ReFlow" width={600} height={600} />
+            <SmartImage className="w-1/4 h-20 object-contain" src="/assets/logo-ars-longa.png" alt="Ars Longa" width={693} height={478} />
           </div>
         </div>
 
@@ -39,7 +40,7 @@ export default function Footer() {
 
           <FooterSection title="Productions" className="border-r-4 border-primary max-md:border-none">
             <p><Link href="/projects/"><span className="link-simple">Portfolio</span></Link></p>
-            <p><Link href="/projects/add"><span className="link-simple">Labeliser un projet</span></Link></p>
+            <p><Link href="/projects/add"><span className="link-simple">Labelliser un projet</span></Link></p>
           </FooterSection>
 
           <FooterSection title="Contact">

@@ -7,8 +7,8 @@ import type { Project } from '../../../types';
 
 export const revalidate = 60;
 export const metadata: Metadata = {
-  title: 'Re-label | Productions',
-  description: "Le Re-Label vise a mettre en avant les projets labelisés et issus d'une démarche responsable.",
+  title: 'Re-Label | Productions',
+  description: "Le Re-Label vise à mettre en avant les projets labellisés et issus d'une démarche responsable.",
   openGraph: { images: ['/assets/logo.png'] },
 };
 
@@ -35,7 +35,7 @@ export default async function ProjectsPage(): Promise<React.JSX.Element> {
       <Card
         title={"Votre projet ?"}
         description={"Vous voulez documenter un projet éco-conçu et en quantifier la démarche ?"}
-        link={{ path: `/projects/add`, text: "Labeliser un projet" }}
+        link={{ path: `/projects/add`, text: "Labelliser un projet" }}
       />
     </Layout>
   );

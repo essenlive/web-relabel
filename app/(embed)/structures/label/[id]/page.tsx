@@ -15,7 +15,7 @@ export default async function StructureLabelPage({ params }: { params: Promise<{
   const structure = await getStructureForLabel(id);
   return (
     <div className={styles.embed}>
-      <a href={pageUrl(`/structures/${structure.id}`)} target={"_parent"}></a>
+      <a href={pageUrl(`/structures/${structure.id}`)} target={"_parent"} aria-label="Voir la fiche sur Re-Label"></a>
       <LabelStructure structure={structure} bordered />
     </div>
   );

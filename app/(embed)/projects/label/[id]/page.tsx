@@ -15,7 +15,7 @@ export default async function ProjectLabelPage({ params }: { params: Promise<{ i
   const project: Project = await getProjectForLabel(id);
   return (
     <div className={styles.embed}>
-      <a href={pageUrl(`/projects/${project.id}`)} target={"_parent"}></a>
+      <a href={pageUrl(`/projects/${project.id}`)} target={"_parent"} aria-label="Voir la fiche sur Re-Label"></a>
       <LabelProject project={project} bordered />
     </div>
   );

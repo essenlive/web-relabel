@@ -72,21 +72,21 @@ export default function StructureDetail({ structure }: StructureDetailProps) {
                 </div>
 
                 <div className={styles.explainer}>
-                    <p>Chaque arc repésente les projets portés.</p>
+                    <p>Chaque arc représente les projets portés.</p>
                     <p><span className={styles.legend} style={{ backgroundColor: structure.colors[0] }}></span>Les projets designés.</p>
                     <p><span className={styles.legend} style={{ backgroundColor: structure.colors[3] }}></span>Les projets produits chez vous.</p>
-                    <p><span className={styles.legend} style={{ backgroundColor: structure.colors[2] }}></span>Les projets dont vous avez fournis la matière.</p>
+                    <p><span className={styles.legend} style={{ backgroundColor: structure.colors[2] }}></span>Les projets dont vous avez fourni la matière.</p>
                     <p><span className={styles.legend} style={{ backgroundColor: structure.colors[1] }}></span>Les projets soutenus.</p>
                 </div>
 
                 <div className={styles.share}>
-                    <h2>Share</h2>
+                    <h2>Partager</h2>
                     <div className={styles.sharing}>
 
                         <EmailShareButton
                             url={pageUrl(`/structures/${structure.id}`)}
                             subject={'Mon Re-Label'}
-                            body={'Je viens de faire mon Re-label sur : '}
+                            body={'Je viens de faire mon Re-Label sur : '}
                         >
                             <EmailIcon size={32} round={true} />
                         </EmailShareButton>
@@ -99,7 +99,7 @@ export default function StructureDetail({ structure }: StructureDetailProps) {
                         <LinkedinShareButton
                             url={pageUrl(`/structures/${structure.id}`)}
                             title={'Mon Re-Label'}
-                            summary={`Je viens de faire mon Re-label sur ${SITE_HOST}`}
+                            summary={`Je viens de faire mon Re-Label sur ${SITE_HOST}`}
                             source={SITE_URL}
                         >
                             <LinkedinIcon size={32} round={true} />
@@ -114,10 +114,10 @@ export default function StructureDetail({ structure }: StructureDetailProps) {
                     </div>
 
                     <div className={styles.embed}>
-                        <span onClick={() => { addToClipboard(iframeCode(`/structures/label/${structure.id}`)) }}>
-                            <BiCopy/> {copied ? "Ajouté au clipboard !" : "Integrer à votre site"}
-                        </span>
-                        <textarea readOnly value={iframeCode(`/structures/label/${structure.id}`)} />
+                        <button type="button" onClick={() => { addToClipboard(iframeCode(`/structures/label/${structure.id}`)) }}>
+                            <BiCopy/> {copied ? "Copié dans le presse-papier !" : "Intégrer à votre site"}
+                        </button>
+                        <textarea readOnly aria-label="Code d'intégration" value={iframeCode(`/structures/label/${structure.id}`)} />
                     </div>
                 </div>
 

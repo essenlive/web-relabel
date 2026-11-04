@@ -14,7 +14,7 @@ export default async function CommunityLabelPage({ params }: { params: Promise<{
   const community = await getCommunity(id);
   return (
     <div className={styles.embed}>
-      <a href={pageUrl(`/communities/${community.id}`)} target={"_parent"}></a>
+      <a href={pageUrl(`/communities/${community.id}`)} target={"_parent"} aria-label="Voir la fiche sur Re-Label"></a>
       <LabelCommunity community={community} bordered />
     </div>
   );

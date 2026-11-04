@@ -136,7 +136,7 @@ export default function ProjectDetail({ project }: ProjectDetailProps): React.JS
                     <p><span className={styles.legend} style={{ backgroundColor: project.colors[2] }}></span>Fabrication locale et sociale.</p>
                 </div>
                 <div className={styles.share}>
-                    <h2>Share</h2>
+                    <h2>Partager</h2>
                     <div className={styles.sharing}>
                         <EmailShareButton url={pageUrl(`/projects/${project.id}`)} subject={'Re-Label'} body={'Je viens de faire le Re-label de mon projet : '}>
                             <EmailIcon size={32} round={true} />
@@ -152,10 +152,10 @@ export default function ProjectDetail({ project }: ProjectDetailProps): React.JS
                         </TwitterShareButton>
                     </div>
                     <div className={styles.embed}>
-                        <span onClick={() => { addToClipboard(iframeCode(`/projects/label/${project.id}`)) }}>
-                            <BiCopy /> {copied ? "Ajouté au clipboard !" : "Integrer à votre site"}
-                        </span>
-                        <textarea readOnly value={iframeCode(`/projects/label/${project.id}`)} />
+                        <button type="button" onClick={() => { addToClipboard(iframeCode(`/projects/label/${project.id}`)) }}>
+                            <BiCopy /> {copied ? "Copié dans le presse-papier !" : "Intégrer à votre site"}
+                        </button>
+                        <textarea readOnly aria-label="Code d'intégration" value={iframeCode(`/projects/label/${project.id}`)} />
                     </div>
                     <button className={classNames(styles.print, "button")} onClick={() => handlePrint()}> Imprimer le certificat </button>
                 </div>

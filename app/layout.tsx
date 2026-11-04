@@ -9,7 +9,7 @@ const barlow = Barlow({ subsets: ['latin'], weight: ['200', '300', '400', '500',
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: 'Re-Label',
-  description: 'Un outils collaboratif qui recense et partage',
+  description: 'Un outil collaboratif qui recense et partage',
   icons: { icon: '/Favicon.png' },
   openGraph: {
     locale: 'fr_FR',

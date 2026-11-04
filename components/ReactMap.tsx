@@ -1,4 +1,5 @@
 'use client';
+import SmartImage from '@components/SmartImage';
 import React, { useState, useRef, useCallback } from 'react';
 import ReactMapGL, { Popup, Source, Layer } from 'react-map-gl/mapbox';
 import styles from "@styles/pages/Structures.module.css";
@@ -156,9 +157,11 @@ export default function ReactMap({ className, structures, initialViewport, color
         anchor="top" >
         <div style={{ padding: '0.75rem' }}>
           {selection.illustrations?.[0] && (
-            <img
+            <SmartImage
               src={selection.illustrations[0]}
               alt={selection.name}
+              width={400}
+              height={240}
               style={{ height: '120px', objectFit: 'cover', borderBottom: '3px solid var(--primary)', marginBottom: '0.5rem', marginLeft: '-0.75rem', marginTop: '-0.75rem', width: 'calc(100% + 1.5rem)' }}
             />
           )}

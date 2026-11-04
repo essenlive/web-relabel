@@ -1,10 +1,11 @@
 import Layout from '@components/Layout'
+import SmartImage from '@components/SmartImage';
 import styles from '@styles/pages/Contact.module.css'
 import Link from 'next/link';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Re-label | Contact',
+  title: 'Re-Label | Contact',
   description: "Le projet Re-Label est porté à Paris dans le cadre du projet ReFlow, par l'équipe de Ars Longa.",
   openGraph: { images: ['/assets/logo.png'] },
 };
@@ -19,9 +20,9 @@ export default function Contact() {
             Le projet <strong>Re-Label</strong> est porté à Paris dans le cadre du projet ReFlow, par l'équipe de Ars Longa. Si vous avez des questions, des suggestions ou autre, contactez nous directement à <Link href="mailto:info@arslonga.fr"><span className={'link'}>info@arslonga.fr</span></Link>
           </p>
           <div className={styles.logos}>
-            <img src='/assets/horizon2020_logo_black.png' alt='logo h2020' />
-            <img src='/assets/reflow.png' alt='logo reflow' />
-            <img src='/assets/LOGO AL couleurs.png' alt='logo ars longa' />
+            <SmartImage src="/assets/horizon2020_logo_black.png" alt="Horizon 2020" width={2420} height={423} />
+            <SmartImage src="/assets/reflow.png" alt="ReFlow" width={600} height={600} />
+            <SmartImage src="/assets/logo-ars-longa.png" alt="Ars Longa" width={693} height={478} />
           </div>
         </div>
         <div className={styles.items}>
@@ -34,7 +35,7 @@ export default function Contact() {
           <div>
             <h3> Proposer une communauté </h3>
             <p>
-              Remplissez le <Link href={{ pathname: '/communities/add' }}><span className={'link'}>formulaire</span></Link> et nous validerons votre communautée au plus vite.
+              Remplissez le <Link href={{ pathname: '/communities/add' }}><span className={'link'}>formulaire</span></Link> et nous validerons votre communauté au plus vite.
             </p>
           </div>
           <div>

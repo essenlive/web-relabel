@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const { id } = await params;
   const community = await getCommunity(id);
   return {
-    title: `Re-label | ${community.name}`,
+    title: `Re-Label | ${community.name}`,
     description: community.description || null,
     openGraph: {
       images: ['/assets/logo.png'],

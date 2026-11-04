@@ -42,11 +42,11 @@ export default function CommunityDetail({community}: CommunityDetailProps): Reac
                     )}
                 {community.id === "rec1PaAXbW2aQik2p" && (
                    <div className={styles.sponsor}>
-                            <a href='https://www.paris.fr/' target="_blank">
-                                <img src='https://upload.wikimedia.org/wikipedia/fr/f/fd/Ville_de_Paris_logo_2019.svg' />
+                            <a href='https://www.paris.fr/' target="_blank" rel="noopener noreferrer">
+                                <img src='https://upload.wikimedia.org/wikipedia/fr/f/fd/Ville_de_Paris_logo_2019.svg' alt='Ville de Paris' loading='lazy' />
                             </a>
-                            <a href='https://arcinnovation.fr/' target="_blank">
-                                <img src='https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.4Snx6zcWTASBCXj7ZJSEnQHaDC%26pid%3DApi&f=1'/>
+                            <a href='https://arcinnovation.fr/' target="_blank" rel="noopener noreferrer">
+                                <img src='https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.4Snx6zcWTASBCXj7ZJSEnQHaDC%26pid%3DApi&f=1' alt='ARC Innovation' loading='lazy' />
                             </a>
                     </div>
                     )}
@@ -88,23 +88,23 @@ export default function CommunityDetail({community}: CommunityDetailProps): Reac
                     <LabelCommunity community={community} />
                 </div>
                 <div className={styles.explainer}>
-                    <p><span className={styles.node}></span>Les noeuds repr\u00e9sentent les membres de la communaut\u00e9.</p>
-                    <p><span className={styles.legend} style={{ backgroundColor: community.colors[0] }}></span>Designers, architectes, artisans, cr\u00e9ateurs...</p>
-                    <p><span className={styles.legend} style={{ backgroundColor: community.colors[1] }}></span>Ateliers de fabrication, menuiserie, c\u00e9ramique, m\u00e9tal...</p>
+                    <p><span className={styles.node}></span>Les noeuds reprÃ©sentent les membres de la communautÃ©.</p>
+                    <p><span className={styles.legend} style={{ backgroundColor: community.colors[0] }}></span>Designers, architectes, artisans, crÃ©ateurs...</p>
+                    <p><span className={styles.legend} style={{ backgroundColor: community.colors[1] }}></span>Ateliers de fabrication, menuiserie, cÃ©ramique, mÃ©tal...</p>
                     <p><span className={styles.legend} style={{ backgroundColor: community.colors[2] }}></span>Fournisseurs, ressourcerie ou espace de stockage...</p>
                     <p><span className={styles.legend} style={{ backgroundColor: community.colors[3] }}></span>Structures partenaires, institutions, incubateurs...</p>
                 </div>
 
                 <div className={styles.share}>
-                    <h2>Share</h2>
+                    <h2>Partager</h2>
                     <div className={styles.sharing}>
-                        <EmailShareButton url={pageUrl(`/communities/${community.id}`)} subject={'Mon Re-Label'} body={'Je viens de faire mon Re-label sur : '}>
+                        <EmailShareButton url={pageUrl(`/communities/${community.id}`)} subject={'Mon Re-Label'} body={'Je viens de faire mon Re-Label sur : '}>
                             <EmailIcon size={32} round={true} />
                         </EmailShareButton>
                         <FacebookShareButton url={pageUrl(`/communities/${community.id}`)} hashtag={'relabel'}>
                             <FacebookIcon size={32} round={true} />
                         </FacebookShareButton>
-                        <LinkedinShareButton url={pageUrl(`/communities/${community.id}`)} title={'Mon Re-Label'} summary={`Je viens de faire mon Re-label sur ${SITE_HOST}`} source={SITE_URL}>
+                        <LinkedinShareButton url={pageUrl(`/communities/${community.id}`)} title={'Mon Re-Label'} summary={`Je viens de faire mon Re-Label sur ${SITE_HOST}`} source={SITE_URL}>
                             <LinkedinIcon size={32} round={true} />
                         </LinkedinShareButton>
                         <TwitterShareButton url={pageUrl(`/communities/${community.id}`)} title={'Mon Re-Label'} hashtags={['relabel']}>
@@ -113,10 +113,10 @@ export default function CommunityDetail({community}: CommunityDetailProps): Reac
                     </div>
 
                     <div className={styles.embed}>
-                        <span onClick={() => { addToClipboard(iframeCode(`/communities/label/${community.id}`)) }}>
-                            <BiCopy /> {copied ? "Ajout\u00e9 au clipboard !" : "Integrer \u00e0 votre site"}
-                        </span>
-                        <textarea readOnly value={iframeCode(`/communities/label/${community.id}`)} />
+                        <button type="button" onClick={() => { addToClipboard(iframeCode(`/communities/label/${community.id}`)) }}>
+                            <BiCopy /> {copied ? "Copié dans le presse-papier !" : "Intégrer à votre site"}
+                        </button>
+                        <textarea readOnly aria-label="Code d'intégration" value={iframeCode(`/communities/label/${community.id}`)} />
                     </div>
                 </div>
             </div>

@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import SmartImage from '@components/SmartImage';
 import classNames from "classnames"
 import Tags from '@components/Tags'
 import Link from 'next/link'
@@ -22,10 +23,14 @@ const Card = ({ title, description, tags, colorMap, link, image, children, class
             {children && children}
             <div className={styles.verso}>
                 {image && image.src &&
-                    <img
+                    <SmartImage
                         className={styles.image}
                         src={image.src}
-                        alt={title}
+                        alt={image.alt || title || ''}
+                        width={600}
+                        height={400}
+                        sizes="(max-width: 768px) 100vw, 350px"
+                        style={{ height: 'auto' }}
                     />
                 }
                 {title &&

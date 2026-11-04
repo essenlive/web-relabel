@@ -21,7 +21,7 @@ export default function LoginForm() {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
 
         if (error) {
-            setError(error.message);
+            setError(error.status === 400 ? 'Email ou mot de passe incorrect.' : 'Connexion impossible, veuillez réessayer.');
             setLoading(false);
             return;
         }
@@ -35,11 +35,12 @@ export default function LoginForm() {
             <div className={styles.form}>
                 <form className={styles.values} onSubmit={handleSubmit}>
                     <h2>Connexion</h2>
-                    {error && <div style={{ color: 'var(--color-rose-500)', marginBottom: '1rem' }}>{error}</div>}
+                    {error && <div role="alert" style={{ color: 'var(--color-rose-500)', marginBottom: '1rem' }}>{error}</div>}
                     <div>
                         <span className={styles.field__prefix}>Email</span>
                         <input
                             type="email"
+                            autoComplete="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             placeholder="admin@essenlive.xyz"
@@ -51,6 +52,7 @@ export default function LoginForm() {
                         <span className={styles.field__prefix}>Mot de passe</span>
                         <input
                             type="password"
+                            autoComplete="current-password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             placeholder="••••••••"

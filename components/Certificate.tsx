@@ -31,7 +31,7 @@ const Certificate = forwardRef<HTMLDivElement, CertificateProps>(({project}, ref
             <div className={styles.verso}>
                 <div className={styles.description}>
                     {project.illustrations && (
-                        <img className={styles.illustration} src={project.illustrations[0]}/>
+                        <img className={styles.illustration} src={project.illustrations[0]} alt={project.name}/>
                     )}
                     <div className={styles.project}>
                         <h1>Le projet </h1>
