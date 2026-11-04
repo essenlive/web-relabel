@@ -1,6 +1,5 @@
 'use client';
-import classNames from "classnames"
-import styles from "@styles/components/LabelStructure.module.css";
+import { cn } from "@libs/utils";
 import { useEffect, useState, useRef } from "react";
 import dynamic from 'next/dynamic'
 import type { Structure } from '../types';
@@ -34,14 +33,15 @@ export default function LabelStructure({ structure, bordered }: LabelStructurePr
         <div
             ref={ref}
             style={{ fontSize: `${width / 20}px` }}
-            className={classNames(styles.label,
-                { [`${styles.bordered}`]: bordered })}>
-                <h2 className={styles.name}>{structure.name && structure.name}</h2>
-                <div className={styles.adress}>{structure.adress && structure.adress}</div>
-                <div className={styles.sketch}>
+            className={cn(
+                "relative flex aspect-[4/5] h-auto w-full max-w-[500px] flex-col content-stretch justify-between overflow-hidden bg-white print:text-[8px]!",
+                bordered && "border-4 border-primary")}>
+                <h2 className="absolute top-[1em] right-[1em] h-[3em] w-[80%] truncate bg-primary px-[1em] text-center text-[0.8em] leading-[3em] text-white uppercase">{structure.name && structure.name}</h2>
+                <div className="absolute top-[calc(4em-4px)] left-[1em] h-[3em] w-[80%] truncate border-4 border-primary bg-white px-[1em] text-center text-[0.8em] leading-[2.4em] font-medium text-primary lowercase">{structure.adress && structure.adress}</div>
+                <div className="h-[80%] w-full overflow-hidden pt-[10%] [&_canvas]:h-auto! [&_canvas]:w-full! [&_canvas]:aspect-square [&_div]:h-auto! [&_div]:w-full! [&_div]:aspect-square">
                     <Sketch structure={structure} labelData={labelData} />
                 </div>
-            <div className={styles.communities}>
+            <div className="flex h-[20%] flex-col items-center justify-evenly border-t-4 border-primary p-[1em]">
                 { structure.communities && ((structure.communities as any[]).map((community: any, i: number) => ( <h3 key={i}>{community.name}</h3>)))}
             </div>
 

@@ -2,7 +2,7 @@
 import { SITE_URL, iframeCode, pageUrl } from '@libs/site';
 import Layout from '@components/Layout'
 import LabelProject from '@components/LabelProject';
-import styles from "@styles/pages/SinglePage.module.css";
+import { detail } from "@libs/detailStyles";
 import Carousel from "@components/Carousel";
 import Link from 'next/link'
 import ReactMap from '@components/ReactMap'
@@ -12,7 +12,6 @@ import { mean } from 'mathjs';
 import { EmailShareButton, FacebookShareButton, LinkedinShareButton, TwitterShareButton, EmailIcon, FacebookIcon, LinkedinIcon, TwitterIcon } from "react-share";
 import { useRef, useState, useEffect, useCallback } from "react";
 import { useReactToPrint } from "react-to-print";
-import classNames from 'classnames';
 import { projectForm } from '@libs/formsData';
 import Certificate from "@components/Certificate";
 import Tags from '@components/Tags';
@@ -65,50 +64,50 @@ export default function ProjectDetail({ project }: ProjectDetailProps): React.JS
 
     return (
         <Layout padded>
-            <div className={styles.projectBanner}>
-                <div className={styles.carousel}>
+            <div className={detail.projectBanner}>
+                <div className={detail.carousel}>
                     {project.illustrations && (<Carousel images={project.illustrations} />)}
                 </div>
-                <div className={styles.title}>
+                <div className={detail.title}>
                     {project.name && (<h1> {project.name}</h1>)}
                     {project.typology && (<h2>{project.typology}</h2>)}
                 </div>
-                <div className={styles.description}>
+                <div className={detail.description}>
                     {project.description && (<p> {project.description} </p>)}
                     {project.website && (<p className={"link"}> <Link href={project.website}> Voir le site</Link></p>)}
                 </div>
-                <div className={styles.detail}>
-                    <div className={styles.materials}>
+                <div className={detail.detail}>
+                    <div>
                         <h3>Materiaux</h3>
                         <div>
                             <b>Fournisseurs</b>
                             {(project.structures as Structure[]).filter((el: Structure) => el.typologies.indexOf("stockage") >= 0).map((el: Structure) => (<span className='link' key={el.id}><Link href={`/structures/${el.id}`}>{el.name}</Link></span>))}
                         </div>
                         {projectForm.inputs.filter((el: FormInput) => el.group === "material").map((input: FormInput, i: number) => (
-                            <ProjectAttributes key={i} name={input.prefix} options={(input.options ?? []).map((el) => el.value)} selection={(project as any)[input.name]} baseColor={"--gray-100"} accentColor={project.colors[0]} />
+                            <ProjectAttributes key={i} name={input.prefix} options={(input.options ?? []).map((el) => el.value)} selection={(project as any)[input.name]} baseColor={"#f4f4f5"} accentColor={project.colors[0]} />
                         ))}
                     </div>
-                    <div className={styles.design}>
+                    <div>
                         <h3>Conception</h3>
                         <div>
                             <b>Designers</b>
                             {(project.structures as Structure[]).filter((el: Structure) => el.typologies.indexOf("designer") >= 0).map((el: Structure) => (<span className='link' key={el.id}><Link href={`/structures/${el.id}`}>{el.name}</Link></span>))}
                         </div>
                         {projectForm.inputs.filter((el: FormInput) => el.group === "design").map((input: FormInput, i: number) => (
-                            <ProjectAttributes key={i} name={input.prefix} options={(input.options ?? []).map((el) => el.value)} selection={(project as any)[input.name]} baseColor={"--gray-100"} accentColor={project.colors[1]} />
+                            <ProjectAttributes key={i} name={input.prefix} options={(input.options ?? []).map((el) => el.value)} selection={(project as any)[input.name]} baseColor={"#f4f4f5"} accentColor={project.colors[1]} />
                         ))}
                     </div>
-                    <div className={styles.fab}>
+                    <div>
                         <h3>Fabrication</h3>
                         <div>
                             <b>Ateliers</b>
                             {(project.structures as Structure[]).filter((el: Structure) => el.typologies.indexOf("atelier") >= 0).map((el: Structure) => (<span className='link' key={el.id}><Link href={`/structures/${el.id}`}>{el.name}</Link></span>))}
                         </div>
                         {projectForm.inputs.filter((el: FormInput) => el.group === "fab").map((input: FormInput, i: number) => (
-                            <ProjectAttributes key={i} name={input.prefix} options={(input.options ?? []).map((el) => el.value)} selection={(project as any)[input.name]} baseColor={"--gray-100"} accentColor={project.colors[2]} />
+                            <ProjectAttributes key={i} name={input.prefix} options={(input.options ?? []).map((el) => el.value)} selection={(project as any)[input.name]} baseColor={"#f4f4f5"} accentColor={project.colors[2]} />
                         ))}
                     </div>
-                    <div className={styles.partners}>
+                    <div>
                         <h3>Soutien</h3>
                         <div>
                             <b>Partenaires</b>
@@ -116,7 +115,7 @@ export default function ProjectDetail({ project }: ProjectDetailProps): React.JS
                         </div>
                     </div>
                 </div>
-                <div className={styles.map}>
+                <div className={detail.map}>
                     {(project.structures as Structure[]).length > 0 && (
                     <ReactMap
                         structures={prepareData(project.structures as Structure[])}
@@ -128,16 +127,16 @@ export default function ProjectDetail({ project }: ProjectDetailProps): React.JS
                         }} />
                     )}
                 </div>
-                <div className={styles.label}> <LabelProject project={project}/></div>
-                <div className={styles.explainer}>
-                    <p><span className={styles.node}></span>Les noeuds représentent le nombre de partenaires.</p>
-                    <p><span className={styles.legend} style={{ backgroundColor: project.colors[0] }}></span>Matériaux sourcés et responsables.</p>
-                    <p><span className={styles.legend} style={{ backgroundColor: project.colors[1] }}></span>Conception ouverte et perenne.</p>
-                    <p><span className={styles.legend} style={{ backgroundColor: project.colors[2] }}></span>Fabrication locale et sociale.</p>
+                <div className={detail.label}> <LabelProject project={project}/></div>
+                <div className={detail.explainer}>
+                    <p><span className={detail.node}></span>Les noeuds représentent le nombre de partenaires.</p>
+                    <p><span className={detail.legend} style={{ backgroundColor: project.colors[0] }}></span>Matériaux sourcés et responsables.</p>
+                    <p><span className={detail.legend} style={{ backgroundColor: project.colors[1] }}></span>Conception ouverte et perenne.</p>
+                    <p><span className={detail.legend} style={{ backgroundColor: project.colors[2] }}></span>Fabrication locale et sociale.</p>
                 </div>
-                <div className={styles.share}>
+                <div className={detail.share}>
                     <h2>Partager</h2>
-                    <div className={styles.sharing}>
+                    <div className={detail.sharing}>
                         <EmailShareButton url={pageUrl(`/projects/${project.id}`)} subject={'Re-Label'} body={'Je viens de faire le Re-label de mon projet : '}>
                             <EmailIcon size={32} round={true} />
                         </EmailShareButton>
@@ -151,17 +150,17 @@ export default function ProjectDetail({ project }: ProjectDetailProps): React.JS
                             <TwitterIcon size={32} round={true} />
                         </TwitterShareButton>
                     </div>
-                    <div className={styles.embed}>
+                    <div className={detail.embed}>
                         <button type="button" onClick={() => { addToClipboard(iframeCode(`/projects/label/${project.id}`)) }}>
                             <BiCopy /> {copied ? "Copié dans le presse-papier !" : "Intégrer à votre site"}
                         </button>
                         <textarea readOnly aria-label="Code d'intégration" value={iframeCode(`/projects/label/${project.id}`)} />
                     </div>
-                    <button className={classNames(styles.print, "button")} onClick={() => handlePrint()}> Imprimer le certificat </button>
+                    <button className={detail.print} onClick={() => handlePrint()}> Imprimer le certificat </button>
                 </div>
             </div>
 
-            <div className={classNames({ [`${styles.visible}`]: visible }, styles.certif)}>
+            <div className={visible ? "block" : "hidden"}>
                 <Certificate ref={componentRef} project={project}/>
             </div>
         </Layout>

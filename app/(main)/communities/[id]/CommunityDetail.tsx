@@ -1,8 +1,7 @@
 'use client';
 import { SITE_HOST, SITE_URL, iframeCode, pageUrl } from '@libs/site';
 import Layout from '@components/Layout'
-import classNames from "classnames"
-import styles from "@styles/pages/SinglePage.module.css";
+import { detail } from "@libs/detailStyles";
 import Link from 'next/link'
 import LabelCommunity from '@components/LabelCommunity';
 import Tags from '@components/Tags';
@@ -28,12 +27,12 @@ export default function CommunityDetail({community}: CommunityDetailProps): Reac
     const colorMap = createMap(community.colors)
     return (
         <Layout padded>
-            <div className={styles.communityBanner}>
-                <div className={styles.title}>
+            <div className={detail.communityBanner}>
+                <div className={detail.title}>
                     {community.name && (<h1> {community.id === "rec1PaAXbW2aQik2p" ? "25 juin Portes ouvertes des fabriques innovantes" : community.name} </h1>)}
                     {community.cities && (<h2>{community.cities.map((el: string, i: number) => (<span key={i}>{el}  </span>))}</h2>)}
                 </div>
-                <div className={styles.description}>
+                <div className={detail.description}>
                     {community.description && (<p> {community.description} </p>)}
                     {community.website && (
                         <p className={"link"}>
@@ -41,7 +40,7 @@ export default function CommunityDetail({community}: CommunityDetailProps): Reac
                         </p>
                     )}
                 {community.id === "rec1PaAXbW2aQik2p" && (
-                   <div className={styles.sponsor}>
+                   <div className={detail.sponsor}>
                             <a href='https://www.paris.fr/' target="_blank" rel="noopener noreferrer">
                                 <img src='https://upload.wikimedia.org/wikipedia/fr/f/fd/Ville_de_Paris_logo_2019.svg' alt='Ville de Paris' loading='lazy' />
                             </a>
@@ -52,25 +51,25 @@ export default function CommunityDetail({community}: CommunityDetailProps): Reac
                     )}
                 </div>
 
-                <div className={styles.structures}>
-                    <div className={styles.structuresTitle}>
+                <div className={detail.structures}>
+                    <div className={detail.structuresTitle}>
                         <span>{(community.structures as Structure[]).length}</span> membres
                     </div>
-                    <div className={styles.structuresList}>
+                    <div className={detail.structuresList}>
                         {community.structures && (community.structures as Structure[]).map((el: Structure, i: number) => (
                         <Link
                             key={i}
                             href={`/structures/${el.id}`}>
                             <div>
-                                <div className={classNames(styles.structure, 'link')}> {el.name} </div>
-                                    <div className={styles.structuresListProject}> <Tags tags={el.typologies} colorMap={colorMap} /></div>
+                                <div className={'link'}> {el.name} </div>
+                                    <div className={detail.structuresListProject}> <Tags tags={el.typologies} colorMap={colorMap} /></div>
                             </div>
                             </Link>
                         ))}
                     </div>
                 </div>
 
-                <div className={styles.map}>
+                <div className={detail.map}>
                     {(community.structures as Structure[]).length > 0 && (
                         <ReactMap
                         structures={community.mapData}
@@ -84,20 +83,20 @@ export default function CommunityDetail({community}: CommunityDetailProps): Reac
                     )}
                 </div>
 
-                <div className={styles.label}>
+                <div className={detail.label}>
                     <LabelCommunity community={community} />
                 </div>
-                <div className={styles.explainer}>
-                    <p><span className={styles.node}></span>Les noeuds représentent les membres de la communauté.</p>
-                    <p><span className={styles.legend} style={{ backgroundColor: community.colors[0] }}></span>Designers, architectes, artisans, créateurs...</p>
-                    <p><span className={styles.legend} style={{ backgroundColor: community.colors[1] }}></span>Ateliers de fabrication, menuiserie, céramique, métal...</p>
-                    <p><span className={styles.legend} style={{ backgroundColor: community.colors[2] }}></span>Fournisseurs, ressourcerie ou espace de stockage...</p>
-                    <p><span className={styles.legend} style={{ backgroundColor: community.colors[3] }}></span>Structures partenaires, institutions, incubateurs...</p>
+                <div className={detail.explainer}>
+                    <p><span className={detail.node}></span>Les noeuds représentent les membres de la communauté.</p>
+                    <p><span className={detail.legend} style={{ backgroundColor: community.colors[0] }}></span>Designers, architectes, artisans, créateurs...</p>
+                    <p><span className={detail.legend} style={{ backgroundColor: community.colors[1] }}></span>Ateliers de fabrication, menuiserie, céramique, métal...</p>
+                    <p><span className={detail.legend} style={{ backgroundColor: community.colors[2] }}></span>Fournisseurs, ressourcerie ou espace de stockage...</p>
+                    <p><span className={detail.legend} style={{ backgroundColor: community.colors[3] }}></span>Structures partenaires, institutions, incubateurs...</p>
                 </div>
 
-                <div className={styles.share}>
+                <div className={detail.share}>
                     <h2>Partager</h2>
-                    <div className={styles.sharing}>
+                    <div className={detail.sharing}>
                         <EmailShareButton url={pageUrl(`/communities/${community.id}`)} subject={'Mon Re-Label'} body={'Je viens de faire mon Re-Label sur : '}>
                             <EmailIcon size={32} round={true} />
                         </EmailShareButton>
@@ -112,7 +111,7 @@ export default function CommunityDetail({community}: CommunityDetailProps): Reac
                         </TwitterShareButton>
                     </div>
 
-                    <div className={styles.embed}>
+                    <div className={detail.embed}>
                         <button type="button" onClick={() => { addToClipboard(iframeCode(`/communities/label/${community.id}`)) }}>
                             <BiCopy /> {copied ? "Copié dans le presse-papier !" : "Intégrer à votre site"}
                         </button>

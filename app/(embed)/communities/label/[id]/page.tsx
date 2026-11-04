@@ -1,6 +1,5 @@
 import { pageUrl } from '@libs/site';
 import LabelCommunity from '@components/LabelCommunity';
-import styles from '@styles/pages/Embeds.module.css';
 import { getCommunity, getAllCommunityIds } from '@libs/data';
 
 export const revalidate = 60;
@@ -13,8 +12,8 @@ export default async function CommunityLabelPage({ params }: { params: Promise<{
   const { id } = await params;
   const community = await getCommunity(id);
   return (
-    <div className={styles.embed}>
-      <a href={pageUrl(`/communities/${community.id}`)} target={"_parent"} aria-label="Voir la fiche sur Re-Label"></a>
+    <div className="relative h-[300px] w-[240px]">
+      <a href={pageUrl(`/communities/${community.id}`)} target={"_parent"} className="absolute z-10 size-full" aria-label="Voir la fiche sur Re-Label"></a>
       <LabelCommunity community={community} bordered />
     </div>
   );

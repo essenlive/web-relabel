@@ -1,7 +1,7 @@
 'use client';
 import { Formik } from 'formik';
 import Link from 'next/link'
-import classNames from 'classnames';
+import { cn } from '@libs/utils';
 import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react';
 import { createClient } from '@libs/supabase/client'
@@ -10,7 +10,7 @@ import Layout from '@components/Layout'
 import LabelStructure from '@components/LabelStructure';
 import { Inputs } from '@components/Inputs';
 import Tags from '@components/Tags';
-import styles from "@styles/pages/Form.module.css";
+import { formStyles } from '@libs/formStyles';
 import dynamic from 'next/dynamic'
 const Confetti = dynamic(() => import('react-confetti'), { ssr: false })
 
@@ -86,7 +86,7 @@ export default function AddStructureForm() {
                 onSubmit={(values) => { submit(values) }}>
                 {(props: any) => {
                     return (
-                        <div className={styles.form}>
+                        <div className={formStyles.form}>
 
                             <Confetti
                                 style={{
@@ -104,8 +104,8 @@ export default function AddStructureForm() {
                                 colors={props.values.colors}
                                 numberOfPieces={sending ? 500 : 0}
                             />
-                            <form className={classNames(styles.values, { [`${styles.submitted}`]: props.isSubmitting })} onSubmit={props.handleSubmit}>
-                                {props.isSubmitting && <div className={styles.sending}><h3>C'est envoyé</h3>
+                            <form className={formStyles.values} onSubmit={props.handleSubmit}>
+                                {props.isSubmitting && <div className={formStyles.sending}><h3>C'est envoyé</h3>
                                 </div>}
                                 <h2>Référencer une structure</h2>
                                 <div>
@@ -117,16 +117,16 @@ export default function AddStructureForm() {
                                         />
                                     ))}
                                 </div>
-                                {submitError && <p role="alert" style={{ color: "var(--red-700)", fontWeight: 700, marginBottom: "1rem" }}>L'envoi a échoué. Vérifiez votre connexion et réessayez.</p>}
+                                {submitError && <p role="alert" className={formStyles.alert}>L'envoi a échoué. Vérifiez votre connexion et réessayez.</p>}
                                 <button
                                     type={"submit"}
-                                    className={classNames(styles.submit)}
+                                    className={formStyles.submit}
                                     onSubmit={props.handleSubmit}
                                 >{props.isValidating ? "Vérification du formulaire" : "Envoyer"}</button>
                             </form>
-                            <div className={styles.visualisation}>
+                            <div className={formStyles.visualisation}>
 
-                                <div className={styles.label}>
+                                <div className={formStyles.label}>
                                     <LabelStructure
                                         structure={{
                                             name : props.values.name,
@@ -137,24 +137,24 @@ export default function AddStructureForm() {
                                         }}
                                     />
                                 </div>
-                                <div className={styles.verso}>
-                                    {props.values.illustrations.length > 0 && <img className={styles.illustration} src={props.values.illustrations[0]} alt="Aperçu de l'illustration" />}
-                                    {props.values.name && <h2 className={styles.name}>{props.values.name}</h2>}
-                                    {props.values.typologies && <Tags className={styles.tags} tags={props.values.typologies} /> }
-                                    {props.values.description && <p className={styles.description}>{props.values.description}</p>}
-                                    {props.values.website && <p className={classNames("link", styles.link)}>
+                                <div className={formStyles.verso}>
+                                    {props.values.illustrations.length > 0 && <img className={formStyles.illustration} src={props.values.illustrations[0]} alt="Aperçu de l'illustration" />}
+                                    {props.values.name && <h2 className={formStyles.name}>{props.values.name}</h2>}
+                                    {props.values.typologies && <Tags className={formStyles.tags} tags={props.values.typologies} /> }
+                                    {props.values.description && <p className={formStyles.description}>{props.values.description}</p>}
+                                    {props.values.website && <p className={cn("link", formStyles.link)}>
                                         <Link href={{ pathname: props.values.website }}> Voir le site</Link>
                                     </p>}
                                 </div>
-                                <div className={styles.explainer}>
+                                <div className={formStyles.explainer}>
                                     <h3>Comprendre ce label</h3>
                                     <p>Ce label représente les projets portés par votre structure. À mesure que des projets dont vous êtes partenaires sont référencés, votre label évoluera.</p>
                                     <p>Chaque arc représente le nombre de projets que vous avez porté, et votre rôle dans chacun d'entre eux.</p>
-                                    <ul className={styles.legends}>
-                                        <li><span className={styles.legend} style={{ backgroundColor: props.values.colors[0] }}></span>Représente les projets que vous avez designés.</li>
-                                        <li><span className={styles.legend} style={{ backgroundColor: props.values.colors[3] }}></span>Représente les projets qui ont été produits chez vous.</li>
-                                        <li><span className={styles.legend} style={{ backgroundColor: props.values.colors[2] }}></span>Représente les projets dont vous avez fourni la matière première.</li>
-                                        <li><span className={styles.legend} style={{ backgroundColor: props.values.colors[1] }}></span>Représente les projets que vous avez soutenus, en tant que partenaire.</li>
+                                    <ul className={formStyles.legends}>
+                                        <li><span className={formStyles.legend} style={{ backgroundColor: props.values.colors[0] }}></span>Représente les projets que vous avez designés.</li>
+                                        <li><span className={formStyles.legend} style={{ backgroundColor: props.values.colors[3] }}></span>Représente les projets qui ont été produits chez vous.</li>
+                                        <li><span className={formStyles.legend} style={{ backgroundColor: props.values.colors[2] }}></span>Représente les projets dont vous avez fourni la matière première.</li>
+                                        <li><span className={formStyles.legend} style={{ backgroundColor: props.values.colors[1] }}></span>Représente les projets que vous avez soutenus, en tant que partenaire.</li>
                                     </ul>
                                 </div>
                             </div>

@@ -1,6 +1,5 @@
 'use client';
-import classNames from "classnames"
-import styles from "@styles/components/LabelProject.module.css";
+import { cn } from "@libs/utils";
 import { useEffect, useState, useRef } from "react";
 import dynamic from 'next/dynamic'
 import scoring from '@libs/scoring'
@@ -38,20 +37,21 @@ export default function LabelProduction({ project, bordered }: LabelProductionPr
         <div
         ref={ref}
             style={{ fontSize: `${(width / 20) < 15 ? 15 : width / 20}px` }}
-        className={classNames(styles.label,
-            { [`${styles.bordered}`]: bordered })}>
+        className={cn(
+            "z-10 grid aspect-square w-full max-w-[500px] grid-cols-5 grid-rows-5 overflow-hidden bg-white",
+            bordered && "border-4 border-primary")}>
 
-            <div className={styles.sketch}>
+            <div className="col-[1/5] row-[1/5] flex aspect-square h-auto w-full items-center justify-center overflow-hidden p-[7%] [&_canvas]:h-auto! [&_canvas]:w-full! [&_canvas]:aspect-square [&_div]:h-auto! [&_div]:w-full! [&_div]:aspect-square">
                 <Sketch project={project} labelData={labelData} />
             </div>
 
-            <h2 className={styles.name}> {project.name && project.name } </h2>
-            <div className={styles.date}>
+            <h2 className="col-[1/6] row-5 flex w-auto flex-row items-center justify-evenly overflow-hidden border-t-4 border-primary p-[0.5em] text-center text-[1.8em] uppercase text-primary"> {project.name && project.name } </h2>
+            <div className="relative col-5 row-1 flex flex-col items-center justify-evenly overflow-hidden border-b-4 border-l-4 border-primary font-bold before:absolute before:-bottom-[4px] before:left-0 before:block before:h-[4px] before:w-[150%] before:origin-top-left before:-rotate-45 before:border-t-4 before:border-primary before:content-[''] [&>p]:absolute [&>p]:p-[0.6em] [&>p]:text-[0.9em] [&>p:first-child]:top-0 [&>p:first-child]:left-0 [&>p:last-child]:right-0 [&>p:last-child]:bottom-0">
                 <p>{project.date ? new Date(project.date).getMonth() + 1 : new Date().getMonth() + 1}</p>
                 <p>{project.date ? new Date(project.date).getFullYear() % 100 : new Date().getFullYear() % 100}</p>
             </div>
 
-            <div className={styles.designer}>
+            <div className="col-5 row-[2/5] flex rotate-180 flex-row items-center justify-evenly border-r-4 border-primary p-[0.2em] text-center font-extralight uppercase [writing-mode:vertical-lr]">
                 {project.team && project.team.map((el: string, i: number) => {
                     return (i > 1 ? null : (<p key={i}>{el}</p>)
                 )})}

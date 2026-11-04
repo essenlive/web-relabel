@@ -1,7 +1,6 @@
 'use client';
 import SmartImage from '@components/SmartImage';
 import { Carousel as Slider} from "react-responsive-carousel";
-import styles from "@styles/components/Carousel.module.css"
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 interface CarouselProps {
@@ -12,7 +11,7 @@ export default function Carousel({ images }: CarouselProps) {
     return(
     <>
     <Slider
-        className={styles.slider}
+        className="size-full object-cover [&_div]:size-full [&_ul]:size-full [&_li]:size-full [&_img]:size-full [&_img]:object-cover"
         autoPlay
         infiniteLoop
         showThumbs={false}
@@ -31,8 +30,7 @@ export default function Carousel({ images }: CarouselProps) {
                 />
                 ))}
     </Slider>
-    {!images.length && (<div className={styles.empty}>Pas d'illustration
-    </div>)}
+    {!images.length && (<div className="flex size-full items-center justify-center bg-[linear-gradient(45deg,hsl(271.9,15%,42%)_0%,hsl(17,87.6%,77.8%)_100%)] text-xl text-white opacity-50">Pas d'illustration</div>)}
     </>
     );
 }

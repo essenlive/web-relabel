@@ -1,6 +1,5 @@
 import { pageUrl } from '@libs/site';
 import LabelProject from '@components/LabelProject';
-import styles from '@styles/pages/Embeds.module.css';
 import { getProjectForLabel, getAllProjectIds } from '@libs/data';
 import type { Project } from '../../../../../types';
 
@@ -14,8 +13,8 @@ export default async function ProjectLabelPage({ params }: { params: Promise<{ i
   const { id } = await params;
   const project: Project = await getProjectForLabel(id);
   return (
-    <div className={styles.embed}>
-      <a href={pageUrl(`/projects/${project.id}`)} target={"_parent"} aria-label="Voir la fiche sur Re-Label"></a>
+    <div className="relative h-[300px] w-[240px]">
+      <a href={pageUrl(`/projects/${project.id}`)} target={"_parent"} className="absolute z-10 size-full" aria-label="Voir la fiche sur Re-Label"></a>
       <LabelProject project={project} bordered />
     </div>
   );

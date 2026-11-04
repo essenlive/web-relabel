@@ -1,13 +1,14 @@
 'use client';
-import styles from "@styles/components/Inputs.module.css";
 import { useField } from "formik";
-import classNames from "classnames";
+import { cn } from "@libs/utils";
 import dynamic from 'next/dynamic'
 import { createClient } from '@libs/supabase/client';
 import type { FormInput } from '../types';
 
 const Select = dynamic(() => import('react-select'), { ssr: false })
 const CreatableSelect = dynamic(() => import('react-select/creatable'), { ssr: false })
+
+const fieldInput = "grow w-full border-b-2 border-primary px-0 py-1 text-left font-normal text-primary";
 
 interface InputsProps {
     input: FormInput;
@@ -23,7 +24,7 @@ export const Inputs = ({ input, ...props}: InputsProps) => {
         case "text":
             inputType = (
                 <textarea
-                className={styles.field__input}
+                className={fieldInput}
                 placeholder={placeholder as string}
                 {...field}
                 {...props}
@@ -33,7 +34,7 @@ export const Inputs = ({ input, ...props}: InputsProps) => {
         case "shortText":
             inputType = (
                 <input
-                    className={styles.field__input}
+                    className={fieldInput}
                     placeholder={placeholder as string}
                     {...field}
                     {...props}
@@ -44,7 +45,7 @@ export const Inputs = ({ input, ...props}: InputsProps) => {
             inputType = (
                 <input
                     type={"checkbox"}
-                    className={styles.field__input}
+                    className={fieldInput}
                     placeholder={placeholder as string}
                     {...field}
                     {...props}
@@ -53,7 +54,7 @@ export const Inputs = ({ input, ...props}: InputsProps) => {
             break;
         case "adress":
             inputType = (<input
-                    className={styles.field__input}
+                    className={fieldInput}
                     placeholder={placeholder as string}
                     autoComplete="street-address"
                     {...field}
@@ -63,7 +64,7 @@ export const Inputs = ({ input, ...props}: InputsProps) => {
         case "url":
             inputType = (<input
                     type="url"
-                    className={styles.field__input}
+                    className={fieldInput}
                     placeholder={placeholder as string}
                     {...field}
                     {...props}
@@ -73,7 +74,7 @@ export const Inputs = ({ input, ...props}: InputsProps) => {
         case "mail":
             inputType = (<input
                         type ="email"
-                        className={styles.field__input}
+                        className={fieldInput}
                         placeholder={placeholder as string}
                         {...field}
                         {...props}
@@ -82,7 +83,7 @@ export const Inputs = ({ input, ...props}: InputsProps) => {
         case "number":
             inputType = (<input
                         type="number"
-                        className={styles.field__input}
+                        className={fieldInput}
                         placeholder={placeholder as string}
                         {...field}
                         {...props}
@@ -91,7 +92,7 @@ export const Inputs = ({ input, ...props}: InputsProps) => {
         case "date":
             inputType = (<input
                         type="date"
-                        className={styles.field__input}
+                        className={fieldInput}
                         placeholder={placeholder as string}
                         {...field}
                         {...props}
@@ -103,7 +104,7 @@ export const Inputs = ({ input, ...props}: InputsProps) => {
                     type="file"
                     accept="image/png,image/jpeg,image/webp"
                     multiple
-                    className={styles.field__input}
+                    className={fieldInput}
                     onChange={async (e) => {
                         const files = e.target.files;
                         if (!files || files.length === 0) return;
@@ -130,19 +131,19 @@ export const Inputs = ({ input, ...props}: InputsProps) => {
             break;
         case "button":
             return (
-                <div className={classNames(styles.field, styles[type])}>
+                <div className="relative mb-8 flex flex-col justify-stretch [&_button]:rounded-none [&_button]:bg-primary">
                     <div
-                        className={classNames(styles.field__prefix, "link")}
+                        className="link font-bold"
                         onClick={() => { setValue(handler![0](handler![1]())) }}
                     >
-                        {prefix && (<span className={styles.field__prefix}>{prefix} {required && (<strong className={styles.required}>*</strong>)}</span>)}
+                        {prefix && (<span className="font-bold">{prefix} {required && (<strong className="text-red-700">*</strong>)}</span>)}
                     </div>
                 </div>
             )
             break;
         case "select":
             inputType = (<Select
-                        className={styles.field__input}
+                        className={fieldInput}
                         classNamePrefix="select"
                         value={options ? options.find((option: any) => option.value === field.value) : ''}
                         onChange={(option: any) => {setValue(option.value)}}
@@ -152,7 +153,7 @@ export const Inputs = ({ input, ...props}: InputsProps) => {
             break;
         case "creatableSelect":
             inputType = (<CreatableSelect
-                        className={styles.field__input}
+                        className={fieldInput}
                         classNamePrefix="select"
                         isMulti
                         onChange={(values: any) => { setValue(values)}}
@@ -161,7 +162,7 @@ export const Inputs = ({ input, ...props}: InputsProps) => {
             break;
         case "multiSelect":
             inputType = (<Select
-                    className={styles.field__input}
+                    className={fieldInput}
                     styles={{padding:"0 !important"} as any}
                     classNamePrefix="select"
                     isMulti
@@ -175,13 +176,17 @@ export const Inputs = ({ input, ...props}: InputsProps) => {
             inputType = ``;
     }
 return (
-    <div className={classNames(styles.field, styles[type])}>
-        {meta.touched && meta.error ? (<div className={styles.field__error}>{meta.error}</div>) : null}
-        {prefix && (<span className={styles.field__prefix}>{prefix} {required && (<strong className={styles.required}>*</strong>)}</span>)}
-        {description && (<span className={styles.field__description}>{description} </span>)}
-        <div className={styles.field__area}>
+    <div className={cn(
+        "relative mb-8 flex flex-col justify-stretch [&_button]:rounded-none [&_button]:bg-primary",
+        type === "text" && "[&_textarea]:w-full! [&_textarea]:text-left",
+        type === "checkbox" && "[&_input]:size-[20px] [&_input]:grow-0"
+    )}>
+        {meta.touched && meta.error ? (<div className="absolute -bottom-4 w-full text-[0.8em] text-red-700">{meta.error}</div>) : null}
+        {prefix && (<span className="font-bold">{prefix} {required && (<strong className="text-red-700">*</strong>)}</span>)}
+        {description && (<span className="font-normal opacity-80">{description} </span>)}
+        <div className="relative my-2 flex flex-row justify-stretch">
             {inputType}
-            {suffix && (<label className={styles.field__suffix}>{suffix}</label>)}
+            {suffix && (<label className="ml-2 font-bold">{suffix}</label>)}
         </div>
 
     </div>)

@@ -1,6 +1,5 @@
 'use client';
-import classNames from "classnames"
-import styles from "@styles/components/LabelCommunity.module.css";
+import { cn } from "@libs/utils";
 import { useEffect, useState, useRef } from "react";
 import dynamic from 'next/dynamic'
 import type { Community, Structure } from '../types';
@@ -58,14 +57,15 @@ export default function LabelCommunity({ community,  bordered }: LabelCommunityP
         <div
             ref={ref}
             style={{ fontSize: `${width / 20}px` }}
-            className={classNames(styles.label,
-                { [`${styles.bordered}`]: bordered })}>
+            className={cn(
+                "flex aspect-[4/5] w-full flex-col content-center justify-between overflow-hidden bg-white p-[1em] print:text-[8px]!",
+                bordered && "border-4 border-primary")}>
 
-            <div className={styles.sketch}>
+            <div className="flex aspect-square h-auto w-full items-center justify-center overflow-hidden p-[7%] [&_canvas]:h-full! [&_canvas]:w-full! [&_canvas]:aspect-square! [&_div]:h-full! [&_div]:w-full! [&_div]:aspect-square!">
                 <Sketch community={community} labelData={labelData} structures={structures} />
             </div>
-            <h2 className={styles.name}> {community.name && community.name}</h2>
-            <h4 className={styles.date}> {community.year && community.year}</h4>
+            <h2 className="mt-[0.5em] w-auto border-4 border-primary p-[0.5em] text-center text-[1.2em] uppercase text-primary"> {community.name && community.name}</h2>
+            <h4 className="w-auto p-[0.5em] text-center font-normal uppercase text-primary"> {community.year && community.year}</h4>
 
         </div>
     )

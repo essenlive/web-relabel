@@ -1,5 +1,4 @@
-import classNames from "classnames"
-import styles from "@styles/components/Tags.module.css";
+import { cn } from "@libs/utils";
 
 interface TagsProps {
     tags: string[];
@@ -8,12 +7,14 @@ interface TagsProps {
     dark?: boolean;
 }
 
+const DEFAULT_COLORS = ["#facc15", "#38bdf8", "#4ade80", "#fb7185", "#f472b6", "#22d3ee"];
+
 const Tags = ({tags, colorMap, className, dark}: TagsProps) => {
 
     let resolvedColorMap: Map<string, string>;
 
     if (!(colorMap instanceof Map)) {
-        let colors = colorMap ? colorMap : ["var(--yellow-400)", "var(--lightBlue-400)", "var(--green-400)", "var(--rose-400)", "var(--pink-400)", "var(--cyan-400)"];
+        const colors = colorMap ? colorMap : DEFAULT_COLORS;
         let i = 0;
         resolvedColorMap = new Map<string, string>();
         tags.forEach((tag: string) => {
@@ -27,9 +28,12 @@ const Tags = ({tags, colorMap, className, dark}: TagsProps) => {
     }
 
     return (
-        <div className={classNames(className, styles.tags)}>
+        <div className={cn("block [&>*:not(:last-child)]:mr-1", className)}>
             {tags.map((tag: string, i: number)=>(
-                <span className={styles.tag} style={{ backgroundColor: resolvedColorMap.get(tag), color: dark ? "var(--black)" : "var(--white)"}} key={i}>{tag}</span>
+                <span
+                    className={cn("inline-block mb-1 px-2 py-1 rounded-sm bg-zinc-100 text-xs leading-normal font-normal", dark ? "text-black" : "text-white")}
+                    style={{ backgroundColor: resolvedColorMap.get(tag) }}
+                    key={i}>{tag}</span>
             ))}
         </div>
     );

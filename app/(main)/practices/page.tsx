@@ -1,5 +1,4 @@
 import Layout from '@components/Layout'
-import styles from '@styles/pages/Practices.module.css';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -11,7 +10,7 @@ export const metadata: Metadata = {
 export default function Practices() {
   return (
     <Layout fullWidth>
-      <div className={styles.practices}>
+      <div className="mt-[100px] h-[calc(100vh-200px)] w-full border-t-4 border-primary">
         <p className="p-4 text-center">
           <a className="link" href="/assets/GUIDE-DE-BONNES-PRATIQUES_V1_Export.pdf" download>Télécharger le guide (PDF)</a>
         </p>

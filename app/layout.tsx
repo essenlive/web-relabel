@@ -1,5 +1,4 @@
-import "@styles/globals/globals.css";
-import "@styles/globals/map.css";
+import "@styles/globals.css";
 import type { Metadata } from 'next';
 import { Barlow } from 'next/font/google';
 import { SITE_URL } from '@libs/site';

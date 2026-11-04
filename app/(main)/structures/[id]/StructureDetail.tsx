@@ -1,8 +1,8 @@
 'use client';
 import { SITE_HOST, SITE_URL, iframeCode, pageUrl } from '@libs/site';
 import Layout from '@components/Layout'
-import classNames from 'classnames';
-import styles from "@styles/pages/SinglePage.module.css";
+import { cn } from '@libs/utils';
+import { detail } from "@libs/detailStyles";
 import Carousel from "@components/Carousel";
 import Link from 'next/link'
 import LabelStructure from '@components/LabelStructure';
@@ -27,61 +27,61 @@ export default function StructureDetail({ structure }: StructureDetailProps) {
     return (
     <Layout padded>
 
-            <div className={classNames(styles.structureBanner)}>
+            <div className={detail.structureBanner}>
 
-                <div className={styles.carousel}>
+                <div className={detail.carousel}>
                     {structure.illustrations && (
                         <Carousel images={structure.illustrations} />
                     )}
                 </div>
 
-                <div className={styles.title}>
+                <div className={detail.title}>
                     {structure.name && (<h1> {structure.name} </h1>)}
                     {structure.typologies && (<h2>{structure.typologies.map((el: string, i: number) => (<span key={i}>{el}  </span>))}</h2>)}
                 </div>
-                <div className={styles.description}>
+                <div className={detail.description}>
                     {structure.description && (<p> {structure.description} </p>)}
                     {structure.website && ( <p className={"link"}>
                         <Link href={structure.website}> Voir le site </Link>
                     </p> )}
                 </div>
 
-                <div className={styles.productions}>
-                    <div className={styles.productionsTitle}>
+                <div className={detail.productions}>
+                    <div className={detail.productionsTitle}>
                         <span>{structure.projects!.length}</span> production.s
                     </div>
-                    <div className={styles.productionsList}>
+                    <div className={detail.productionsList}>
                         {structure.projects && structure.projects.map((el) => (
                         <Link
                             key={el.id}
                             href={`/projects/${el.id}`}>
                             <div>
-                                <div className={classNames(styles.productionsListName, 'link')}> {el.name} </div>
-                                <div className={styles.productionsListProject}> {el.team[0]} </div>
+                                <div className={cn(detail.productionsListName, 'link')}> {el.name} </div>
+                                <div className={detail.productionsListProject}> {el.team[0]} </div>
                             </div>
                             </Link>
                         ))}
                     </div>
                 </div>
 
-                <div className={styles.label}>
+                <div className={detail.label}>
                     <LabelStructure
                         structure={structure}
                         bordered
                     />
                 </div>
 
-                <div className={styles.explainer}>
+                <div className={detail.explainer}>
                     <p>Chaque arc représente les projets portés.</p>
-                    <p><span className={styles.legend} style={{ backgroundColor: structure.colors[0] }}></span>Les projets designés.</p>
-                    <p><span className={styles.legend} style={{ backgroundColor: structure.colors[3] }}></span>Les projets produits chez vous.</p>
-                    <p><span className={styles.legend} style={{ backgroundColor: structure.colors[2] }}></span>Les projets dont vous avez fourni la matière.</p>
-                    <p><span className={styles.legend} style={{ backgroundColor: structure.colors[1] }}></span>Les projets soutenus.</p>
+                    <p><span className={detail.legend} style={{ backgroundColor: structure.colors[0] }}></span>Les projets designés.</p>
+                    <p><span className={detail.legend} style={{ backgroundColor: structure.colors[3] }}></span>Les projets produits chez vous.</p>
+                    <p><span className={detail.legend} style={{ backgroundColor: structure.colors[2] }}></span>Les projets dont vous avez fourni la matière.</p>
+                    <p><span className={detail.legend} style={{ backgroundColor: structure.colors[1] }}></span>Les projets soutenus.</p>
                 </div>
 
-                <div className={styles.share}>
+                <div className={detail.share}>
                     <h2>Partager</h2>
-                    <div className={styles.sharing}>
+                    <div className={detail.sharing}>
 
                         <EmailShareButton
                             url={pageUrl(`/structures/${structure.id}`)}
@@ -113,7 +113,7 @@ export default function StructureDetail({ structure }: StructureDetailProps) {
                         </TwitterShareButton>
                     </div>
 
-                    <div className={styles.embed}>
+                    <div className={detail.embed}>
                         <button type="button" onClick={() => { addToClipboard(iframeCode(`/structures/label/${structure.id}`)) }}>
                             <BiCopy/> {copied ? "Copié dans le presse-papier !" : "Intégrer à votre site"}
                         </button>

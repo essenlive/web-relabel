@@ -2,12 +2,11 @@
 import SmartImage from '@components/SmartImage';
 import React, { useState, useRef, useCallback } from 'react';
 import ReactMapGL, { Popup, Source, Layer } from 'react-map-gl/mapbox';
-import styles from "@styles/pages/Structures.module.css";
 import Link from 'next/link';
 import { clusterLayer, clusterCountLayer, unclusteredPointLayer, workshopsLayer, othersLayer, suppliersLayer, designersLayer } from '@libs/layers';
 import Tags from '@components/Tags';
 import {createMap} from '@libs/getColors'
-import classNames from 'classnames';
+import { cn } from '@libs/utils';
 import type { GeoJSONFeatureCollection, Structure } from '../types';
 
 const INTERACTIVE_LAYERS = [
@@ -118,7 +117,7 @@ export default function ReactMap({ className, structures, initialViewport, color
   const selectionCoords = selection ? validCoords(selection.longitude, selection.latitude) : null;
   const pickerCoords = picker?.[0] ? validCoords(picker[0].longitude, picker[0].latitude) : null;
 
-  return  (<div className={classNames(className)} style={{ width: "100%", height: "100%" }}><ReactMapGL
+  return  (<div className={cn(className)} style={{ width: "100%", height: "100%" }}><ReactMapGL
       initialViewState={initialViewport}
       mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOXTOKEN}
       style={{ width: "100%", height: "100%" }}
@@ -155,22 +154,22 @@ export default function ReactMap({ className, structures, initialViewport, color
         closeOnClick={false}
         onClose={() => close()}
         anchor="top" >
-        <div style={{ padding: '0.75rem' }}>
+        <div className="p-3">
           {selection.illustrations?.[0] && (
             <SmartImage
               src={selection.illustrations[0]}
               alt={selection.name}
               width={400}
               height={240}
-              style={{ height: '120px', objectFit: 'cover', borderBottom: '3px solid var(--primary)', marginBottom: '0.5rem', marginLeft: '-0.75rem', marginTop: '-0.75rem', width: 'calc(100% + 1.5rem)' }}
+              className="-mt-3 -ml-3 mb-2 h-[120px] w-[calc(100%+1.5rem)] border-b-[3px] border-primary object-cover"
             />
           )}
-          <h3 style={{ fontSize: '0.85rem', fontWeight: 700, textTransform: 'uppercase', marginBottom: '0.25rem' }}>
+          <h3 className="mb-1 text-[0.85rem] font-bold uppercase">
             {selection.name}
           </h3>
           <Tags tags={selection.typologies} colorMap={resolvedColorMap} />
           <Link href={`/structures/${selection.id}`}>
-            <p className="link" style={{ marginTop: '0.5rem', fontSize: '0.8rem' }}>Voir la structure</p>
+            <p className="link mt-2 text-[0.8rem]">Voir la structure</p>
           </Link>
         </div>
       </Popup>}
@@ -182,11 +181,11 @@ export default function ReactMap({ className, structures, initialViewport, color
         closeOnClick={false}
         onClose={() => close()}
         anchor="top" >
-        <div className={styles.picker}>
-          <h3 className={styles.picker__title}>Structures</h3>
+        <div className="z-1000 block p-2">
+          <h3 className="pl-8">Structures</h3>
         {picker.map((el: Structure, i: number)=>{
           return(
-            <div className={styles.picker__choices} key={el.id} onClick={()=>{onPickerClick(el)}}>
+            <div className="mt-2 flex cursor-pointer flex-row items-center justify-between hover:[&>span]:font-bold" key={el.id} onClick={()=>{onPickerClick(el)}}>
               <span>{el.name}</span>
               <Tags tags={el.typologies} colorMap={resolvedColorMap}/>
             </div>

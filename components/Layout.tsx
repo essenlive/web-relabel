@@ -14,8 +14,8 @@ interface LayoutProps {
 const Layout = ({full, padded, children, grid, fullWidth}: LayoutProps) => {
   return (
     <div className={cn(
-      "flex flex-col overflow-x-hidden bg-repeat bg-fixed print:bg-none min-h-screen",
-    )} style={{ backgroundImage: "url('/assets/memphis-mini.png')" }}>
+      "flex min-h-screen flex-col overflow-x-hidden bg-[url('/assets/memphis-mini.png')] bg-fixed bg-repeat print:bg-none",
+    )} >
       <header className={cn(
         "w-full shrink-0 z-100 print:hidden",
         full && "absolute top-0 left-0 right-0 z-50"

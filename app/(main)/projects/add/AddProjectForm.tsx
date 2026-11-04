@@ -3,12 +3,12 @@ import { Formik } from 'formik';
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react';
-import classNames from 'classnames';
+import { cn } from '@libs/utils';
 import { createClient } from '@libs/supabase/client'
 import dynamic from 'next/dynamic'
 const Confetti = dynamic(() => import('react-confetti'), { ssr: false })
 
-import styles from "@styles/pages/Form.module.css";
+import { formStyles } from '@libs/formStyles';
 import LabelProject from '@components/LabelProject';
 import { Inputs } from '@components/Inputs';
 import Layout from '@components/Layout'
@@ -82,14 +82,14 @@ export default function AddProjectForm(): React.JSX.Element {
                 onSubmit={(values: any) => { submit(values) }}>
                 {(props: any) => {
                     return (
-                        <div className={styles.form}>
+                        <div className={formStyles.form}>
                             <Confetti
                                 style={{ pointerEvents: 'none', zIndex: 20, position: "fixed", left: 0, right: 0, top: 0, bottom: 0, inset: 0, width: "100%", height: "100%" }}
                                 colors={props.values.colors}
                                 numberOfPieces={sending ? 500 : 0}
                             />
-                            <form className={classNames(styles.values, { [`${styles.submitted}`]: sending })} onSubmit={props.handleSubmit}>
-                                {sending && <div className={styles.sending}><h3>C'est envoyé</h3></div>}
+                            <form className={formStyles.values} onSubmit={props.handleSubmit}>
+                                {sending && <div className={formStyles.sending}><h3>C'est envoyé</h3></div>}
                                 <h2>Présentation du projet</h2>
                                 <div>{projectForm.inputs.filter((el: FormInput) => el.group === "meta").map((input: FormInput, i: number) => (<Inputs key={i} input={input} name={input.name} />))}</div>
                                 <h3>Les matériaux</h3>
@@ -100,13 +100,13 @@ export default function AddProjectForm(): React.JSX.Element {
                                 <div>{projectForm.inputs.filter((el: FormInput) => el.group === "fab").map((input: FormInput, i: number) => (<Inputs key={i} input={input} name={input.name} />))}</div>
                                 <div>{projectForm.inputs.filter((el: FormInput) => el.group === "customize").map((input: FormInput, i: number) => (<Inputs key={i} input={input} name={input.name} />))}</div>
                                 <div>{projectForm.inputs.filter((el: FormInput) => el.group === "rgpd").map((input: FormInput, i: number) => (<Inputs key={i} input={input} name={input.name} />))}</div>
-                                {submitError && <p role="alert" style={{ color: "var(--red-700)", fontWeight: 700, marginBottom: "1rem" }}>L'envoi a échoué. Vérifiez votre connexion et réessayez.</p>}
-                                <button type={"submit"} className={classNames(styles.submit)} onSubmit={props.handleSubmit}>
+                                {submitError && <p role="alert" className={formStyles.alert}>L'envoi a échoué. Vérifiez votre connexion et réessayez.</p>}
+                                <button type={"submit"} className={formStyles.submit} onSubmit={props.handleSubmit}>
                                     {props.isValidating ? "Vérification du formulaire" : "Envoyer"}
                                 </button>
                             </form>
-                            <div className={styles.visualisation}>
-                                <div className={styles.label}>
+                            <div className={formStyles.visualisation}>
+                                <div className={formStyles.label}>
                                     <LabelProject
                                         project={{
                                             name: props.values.name, date: props.values.date,
@@ -125,22 +125,22 @@ export default function AddProjectForm(): React.JSX.Element {
                                         }}
                                     />
                                 </div>
-                                <div className={styles.verso}>
-                                    {props.values.illustrations.length > 0 && <img className={styles.illustration} src={props.values.illustrations[0]} alt="Aperçu de l'illustration"/>}
-                                    {props.values.name && <h2 className={styles.name}>{props.values.name}</h2>}
-                                    {props.values.typology && <Tags className={styles.tags} tags={[props.values.typology]} />}
-                                    {props.values.description && <p className={styles.description}>{props.values.description}</p>}
-                                    {props.values.website && <p className={classNames("link", styles.link)}><Link href={{ pathname: props.values.website }}> Voir le site</Link></p>}
+                                <div className={formStyles.verso}>
+                                    {props.values.illustrations.length > 0 && <img className={formStyles.illustration} src={props.values.illustrations[0]} alt="Aperçu de l'illustration"/>}
+                                    {props.values.name && <h2 className={formStyles.name}>{props.values.name}</h2>}
+                                    {props.values.typology && <Tags className={formStyles.tags} tags={[props.values.typology]} />}
+                                    {props.values.description && <p className={formStyles.description}>{props.values.description}</p>}
+                                    {props.values.website && <p className={cn("link", formStyles.link)}><Link href={{ pathname: props.values.website }}> Voir le site</Link></p>}
                                 </div>
-                                <div className={styles.explainer}>
+                                <div className={formStyles.explainer}>
                                     <h3>Comprendre ce label</h3>
                                     <p>Ce label illustre les initiatives eco-responsables du projet. En complément du certificat il permet de notifier votre démache et en donner un aperçu.</p>
                                     <p>Chacun des noeuds représente un partenaire du projet que vous avez réussi à impliquer.</p>
                                     <p>Les proportions des différentes couleurs représentent chacun de vos engagements :</p>
-                                    <ul className={styles.legends}>
-                                        <li><span className={styles.legend} style={{ backgroundColor: props.values.colors[1] }}></span>Représente votre engagement en terme de conception ouverte et perenne.</li>
-                                        <li><span className={styles.legend} style={{ backgroundColor: props.values.colors[2] }}></span>Représente votre engagement d'un point de vue fabrication localisée, et circuits courts.</li>
-                                        <li><span className={styles.legend} style={{ backgroundColor: props.values.colors[0] }}></span>Représente votre engament en terme de matériaux responsables.</li>
+                                    <ul className={formStyles.legends}>
+                                        <li><span className={formStyles.legend} style={{ backgroundColor: props.values.colors[1] }}></span>Représente votre engagement en terme de conception ouverte et perenne.</li>
+                                        <li><span className={formStyles.legend} style={{ backgroundColor: props.values.colors[2] }}></span>Représente votre engagement d'un point de vue fabrication localisée, et circuits courts.</li>
+                                        <li><span className={formStyles.legend} style={{ backgroundColor: props.values.colors[0] }}></span>Représente votre engament en terme de matériaux responsables.</li>
                                     </ul>
                                 </div>
                             </div>

@@ -1,6 +1,0 @@
-.practices {
-    margin-top: 100px;
-    height: calc(100vh - 200px);
-    width: 100%;
-    border-top: var(--primary) var(--borderWidth-lg) solid;
-}

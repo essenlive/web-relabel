@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Layout from '@components/Layout';
 import { createClient } from '@libs/supabase/client';
-import styles from '@styles/pages/Form.module.css';
+import { formStyles } from '@libs/formStyles';
 
 export default function LoginForm() {
     const [email, setEmail] = useState('');
@@ -32,12 +32,12 @@ export default function LoginForm() {
 
     return (
         <Layout padded>
-            <div className={styles.form}>
-                <form className={styles.values} onSubmit={handleSubmit}>
+            <div className={formStyles.form}>
+                <form className={formStyles.values} onSubmit={handleSubmit}>
                     <h2>Connexion</h2>
-                    {error && <div role="alert" style={{ color: 'var(--color-rose-500)', marginBottom: '1rem' }}>{error}</div>}
+                    {error && <div role="alert" className="mb-4 text-rose-500">{error}</div>}
                     <div>
-                        <span className={styles.field__prefix}>Email</span>
+                        <span className="font-bold">Email</span>
                         <input
                             type="email"
                             autoComplete="email"
@@ -45,11 +45,11 @@ export default function LoginForm() {
                             onChange={(e) => setEmail(e.target.value)}
                             placeholder="admin@essenlive.xyz"
                             required
-                            style={{ width: '100%', padding: '0.5rem', marginBottom: '1rem' }}
+                            className="mb-4 w-full p-2"
                         />
                     </div>
                     <div>
-                        <span className={styles.field__prefix}>Mot de passe</span>
+                        <span className="font-bold">Mot de passe</span>
                         <input
                             type="password"
                             autoComplete="current-password"
@@ -57,7 +57,7 @@ export default function LoginForm() {
                             onChange={(e) => setPassword(e.target.value)}
                             placeholder="••••••••"
                             required
-                            style={{ width: '100%', padding: '0.5rem', marginBottom: '1rem' }}
+                            className="mb-4 w-full p-2"
                         />
                     </div>
                     <button type="submit" className="button" disabled={loading}>
