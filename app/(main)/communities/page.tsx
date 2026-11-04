@@ -6,8 +6,8 @@ import { getCommunities } from '@libs/data';
 
 export const revalidate = 60;
 export const metadata: Metadata = {
-  title: 'Re-Label | CommunautÃ©s',
-  description: "Le Re-Label vise à animer des communautÃ©s de bonnes pratiques localisÃ©es sur le territoire.",
+  title: 'Re-Label | Communautés',
+  description: "Le Re-Label vise à animer des communautés de bonnes pratiques localisées sur le territoire.",
   openGraph: { images: ['/assets/logo.png'] },
 };
 
@@ -24,7 +24,7 @@ export default async function CommunitiesPage(): Promise<React.JSX.Element> {
             tags={community.cities}
             description={community.description}
             colorMap={community.colors}
-            link={{ path: `/communities/${community.id}`, text: "Voir la communautÃ©" }}
+            link={{ path: `/communities/${community.id}`, text: "Voir la communauté" }}
             id={community.id}
           >
             <LabelCommunity community={community} />
@@ -33,8 +33,8 @@ export default async function CommunitiesPage(): Promise<React.JSX.Element> {
       })}
       <Card
         title={"La vôtre ?"}
-        description={"Vous faites partie d'une communautÃ© qui oeuvre pour des pratiques plus reponsables et solidaires dans la fabrication et la production ?"}
-        link={{ path: `/communities/add`, text: "Proposer une communautÃ©" }}
+        description={"Vous faites partie d'une communauté qui oeuvre pour des pratiques plus reponsables et solidaires dans la fabrication et la production ?"}
+        link={{ path: `/communities/add`, text: "Proposer une communauté" }}
       />
     </Layout>
   );

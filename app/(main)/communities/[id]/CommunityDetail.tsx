@@ -88,9 +88,9 @@ export default function CommunityDetail({community}: CommunityDetailProps): Reac
                     <LabelCommunity community={community} />
                 </div>
                 <div className={styles.explainer}>
-                    <p><span className={styles.node}></span>Les noeuds reprÃ©sentent les membres de la communautÃ©.</p>
-                    <p><span className={styles.legend} style={{ backgroundColor: community.colors[0] }}></span>Designers, architectes, artisans, crÃ©ateurs...</p>
-                    <p><span className={styles.legend} style={{ backgroundColor: community.colors[1] }}></span>Ateliers de fabrication, menuiserie, cÃ©ramique, mÃ©tal...</p>
+                    <p><span className={styles.node}></span>Les noeuds représentent les membres de la communauté.</p>
+                    <p><span className={styles.legend} style={{ backgroundColor: community.colors[0] }}></span>Designers, architectes, artisans, créateurs...</p>
+                    <p><span className={styles.legend} style={{ backgroundColor: community.colors[1] }}></span>Ateliers de fabrication, menuiserie, céramique, métal...</p>
                     <p><span className={styles.legend} style={{ backgroundColor: community.colors[2] }}></span>Fournisseurs, ressourcerie ou espace de stockage...</p>
                     <p><span className={styles.legend} style={{ backgroundColor: community.colors[3] }}></span>Structures partenaires, institutions, incubateurs...</p>
                 </div>

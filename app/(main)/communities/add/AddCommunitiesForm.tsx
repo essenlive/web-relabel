@@ -64,8 +64,8 @@ export default function AddCommunitiesForm(): React.JSX.Element | React.ReactEle
                                 numberOfPieces={sending ? 500 : 0}
                             />
                             <form className={classNames(styles.values, { [`${styles.submitted}`]: props.isSubmitting })} onSubmit={props.handleSubmit}>
-                                {props.isSubmitting && <div className={styles.sending}><h3>C'est envoyÃ©</h3></div>}
-                                <h2>PrÃ©sentation de la communautÃ©</h2>
+                                {props.isSubmitting && <div className={styles.sending}><h3>C'est envoyé</h3></div>}
+                                <h2>Présentation de la communauté</h2>
                                 <div>
                                     {communityForm.inputs.map((input, i: number) => (
                                         <Inputs key={i} input={input} name={input.name} />
@@ -73,7 +73,7 @@ export default function AddCommunitiesForm(): React.JSX.Element | React.ReactEle
                                 </div>
                                 {submitError && <p role="alert" style={{ color: "var(--red-700)", fontWeight: 700, marginBottom: "1rem" }}>L'envoi a échoué. Vérifiez votre connexion et réessayez.</p>}
                                 <button type={"submit"} className={classNames(styles.submit)} onSubmit={props.handleSubmit}>
-                                    {props.isValidating ? "VÃ©rification du formulaire" : "Envoyer"}
+                                    {props.isValidating ? "Vérification du formulaire" : "Envoyer"}
                                 </button>
                             </form>
                             <div className={styles.visualisation}>
@@ -96,13 +96,13 @@ export default function AddCommunitiesForm(): React.JSX.Element | React.ReactEle
                                 </div>
                                 <div className={styles.explainer}>
                                     <h3>Comprendre ce label</h3>
-                                    <p>Ce label reprÃ©sente les membres de votre communautÃ©, il est dynamique et Ã©voluera Ã  mesure que votre communautÃ© grandira.</p>
-                                    <p>Les noeuds reprÃ©sentent chacun des membres de votre communautÃ©s, et leur formes reflÃ¨tes le types de membres.</p>
+                                    <p>Ce label représente les membres de votre communauté, il est dynamique et évoluera à mesure que votre communauté grandira.</p>
+                                    <p>Les noeuds représentent chacun des membres de votre communautés, et leur formes reflètes le types de membres.</p>
                                     <ul className={styles.legends}>
-                                        <li><span className={styles.legend} style={{ backgroundColor: props.values.colors[0] }}></span>ReprÃ©sente les structures de conception de votre rÃ©seau, les designers, architectes, artisans, crÃ©ateurs...</li>
-                                        <li><span className={styles.legend} style={{ backgroundColor: props.values.colors[1] }}></span>ReprÃ©sente les ateliers de fabrication, partagÃ©s et privÃ©s, menuiserie, cÃ©ramique, mÃ©tal...</li>
-                                        <li><span className={styles.legend} style={{ backgroundColor: props.values.colors[2] }}></span>ReprÃ©sente les structures apportant la matiÃ¨re, que ce soit des ressourcerie ou des fournisseurs traditionnels.</li>
-                                        <li><span className={styles.legend} style={{ backgroundColor: props.values.colors[3] }}></span>ReprÃ©sente les autres structures partenaires, que ce soit des soutiens institutionnels, incubateurs...</li>
+                                        <li><span className={styles.legend} style={{ backgroundColor: props.values.colors[0] }}></span>Représente les structures de conception de votre réseau, les designers, architectes, artisans, créateurs...</li>
+                                        <li><span className={styles.legend} style={{ backgroundColor: props.values.colors[1] }}></span>Représente les ateliers de fabrication, partagés et privés, menuiserie, céramique, métal...</li>
+                                        <li><span className={styles.legend} style={{ backgroundColor: props.values.colors[2] }}></span>Représente les structures apportant la matière, que ce soit des ressourcerie ou des fournisseurs traditionnels.</li>
+                                        <li><span className={styles.legend} style={{ backgroundColor: props.values.colors[3] }}></span>Représente les autres structures partenaires, que ce soit des soutiens institutionnels, incubateurs...</li>
                                     </ul>
                                 </div>
                             </div>
