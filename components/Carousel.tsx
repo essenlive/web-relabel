@@ -1,4 +1,5 @@
 'use client';
+import SmartImage from '@components/SmartImage';
 import { Carousel as Slider} from "react-responsive-carousel";
 import styles from "@styles/components/Carousel.module.css"
 import "react-responsive-carousel/lib/styles/carousel.min.css";
@@ -19,10 +20,14 @@ export default function Carousel({ images }: CarouselProps) {
         showIndicators={false}
         >
         {images && images.map((item: string, i: number) => (
-                <img
+                <SmartImage
                 key={i}
                 src={item}
-                alt={`illustration ${i}`}
+                alt={`Illustration ${i + 1} sur ${images.length}`}
+                width={1200}
+                height={800}
+                sizes="(max-width: 1080px) 100vw, 1080px"
+                priority={i === 0}
                 />
                 ))}
     </Slider>

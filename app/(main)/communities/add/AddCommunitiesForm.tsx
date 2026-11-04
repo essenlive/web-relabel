@@ -18,6 +18,7 @@ export default function AddCommunitiesForm(): React.JSX.Element | React.ReactEle
     const router = useRouter()
     const [sending, setSending] = useState<boolean>(false)
     const [loadError, setLoadError] = useState<boolean>(false)
+    const [submitError, setSubmitError] = useState<boolean>(false)
     const supabase = createClient()
 
     useEffect(() => {
@@ -34,16 +35,17 @@ export default function AddCommunitiesForm(): React.JSX.Element | React.ReactEle
             });
     }, []);
 
-    if (loadError) return <div>Failed to load</div>
+    if (loadError) return <Layout padded><p role="alert">Impossible de charger le formulaire. Veuillez réessayer plus tard.</p></Layout>
 
     const submit = async (fields: any): Promise<void> => {
         setSending(true)
+        setSubmitError(false)
         const data: any = { ...fields };
         data.cities = fields.cities.map((el: { value: string }) => el.value);
         data.is_draft = true;
         delete data.rgpd;
         const { error } = await supabase.from('communities').insert(data);
-        if (error) { console.error('Submit error:', error); setSending(false); return; }
+        if (error) { console.error('Submit error:', error); setSending(false); setSubmitError(true); return; }
         router.push(`/`);
     }
 
@@ -62,15 +64,16 @@ export default function AddCommunitiesForm(): React.JSX.Element | React.ReactEle
                                 numberOfPieces={sending ? 500 : 0}
                             />
                             <form className={classNames(styles.values, { [`${styles.submitted}`]: props.isSubmitting })} onSubmit={props.handleSubmit}>
-                                {props.isSubmitting && <div className={styles.sending}><h3>C'est envoy\u00e9</h3></div>}
-                                <h2>Pr\u00e9sentation de la communaut\u00e9</h2>
+                                {props.isSubmitting && <div className={styles.sending}><h3>C'est envoyé</h3></div>}
+                                <h2>Présentation de la communauté</h2>
                                 <div>
                                     {communityForm.inputs.map((input, i: number) => (
                                         <Inputs key={i} input={input} name={input.name} />
                                     ))}
                                 </div>
+                                {submitError && <p role="alert" style={{ color: "var(--red-700)", fontWeight: 700, marginBottom: "1rem" }}>L'envoi a échoué. Vérifiez votre connexion et réessayez.</p>}
                                 <button type={"submit"} className={classNames(styles.submit)} onSubmit={props.handleSubmit}>
-                                    {props.isValidating ? "V\u00e9rification du formulaire" : "Envoyer"}
+                                    {props.isValidating ? "Vérification du formulaire" : "Envoyer"}
                                 </button>
                             </form>
                             <div className={styles.visualisation}>
@@ -93,13 +96,13 @@ export default function AddCommunitiesForm(): React.JSX.Element | React.ReactEle
                                 </div>
                                 <div className={styles.explainer}>
                                     <h3>Comprendre ce label</h3>
-                                    <p>Ce label repr\u00e9sente les membres de votre communaut\u00e9, il est dynamique et \u00e9voluera \u00e0 mesure que votre communaut\u00e9 grandira.</p>
-                                    <p>Les noeuds repr\u00e9sentent chacun des membres de votre communaut\u00e9s, et leur formes refl\u00e8tes le types de membres.</p>
+                                    <p>Ce label représente les membres de votre communauté, il est dynamique et évoluera à mesure que votre communauté grandira.</p>
+                                    <p>Les noeuds représentent chacun des membres de votre communautés, et leur formes reflètes le types de membres.</p>
                                     <ul className={styles.legends}>
-                                        <li><span className={styles.legend} style={{ backgroundColor: props.values.colors[0] }}></span>Repr\u00e9sente les structures de conception de votre r\u00e9seau, les designers, architectes, artisans, cr\u00e9ateurs...</li>
-                                        <li><span className={styles.legend} style={{ backgroundColor: props.values.colors[1] }}></span>Repr\u00e9sente les ateliers de fabrication, partag\u00e9s et priv\u00e9s, menuiserie, c\u00e9ramique, m\u00e9tal...</li>
-                                        <li><span className={styles.legend} style={{ backgroundColor: props.values.colors[2] }}></span>Repr\u00e9sente les structures apportant la mati\u00e8re, que ce soit des ressourcerie ou des fournisseurs traditionnels.</li>
-                                        <li><span className={styles.legend} style={{ backgroundColor: props.values.colors[3] }}></span>Repr\u00e9sente les autres structures partenaires, que ce soit des soutiens institutionnels, incubateurs...</li>
+                                        <li><span className={styles.legend} style={{ backgroundColor: props.values.colors[0] }}></span>Représente les structures de conception de votre réseau, les designers, architectes, artisans, créateurs...</li>
+                                        <li><span className={styles.legend} style={{ backgroundColor: props.values.colors[1] }}></span>Représente les ateliers de fabrication, partagés et privés, menuiserie, céramique, métal...</li>
+                                        <li><span className={styles.legend} style={{ backgroundColor: props.values.colors[2] }}></span>Représente les structures apportant la matière, que ce soit des ressourcerie ou des fournisseurs traditionnels.</li>
+                                        <li><span className={styles.legend} style={{ backgroundColor: props.values.colors[3] }}></span>Représente les autres structures partenaires, que ce soit des soutiens institutionnels, incubateurs...</li>
                                     </ul>
                                 </div>
                             </div>

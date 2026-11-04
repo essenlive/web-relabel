@@ -18,6 +18,7 @@ export default function AddStructureForm() {
     const router = useRouter()
     const [sending, setSending] = useState<boolean>(false)
     const [loadError, setLoadError] = useState<boolean>(false)
+    const [submitError, setSubmitError] = useState<boolean>(false)
     const supabase = createClient()
 
     useEffect(() => {
@@ -32,10 +33,11 @@ export default function AddStructureForm() {
             });
     }, []);
 
-    if (loadError) return <div>Failed to load</div>
+    if (loadError) return <Layout padded><p role="alert">Impossible de charger le formulaire. Veuillez réessayer plus tard.</p></Layout>
 
     const submit = async (fields: any) => {
         setSending(true)
+        setSubmitError(false)
         const data: any = { ...fields };
 
         // Extract community selections for junction table
@@ -62,7 +64,7 @@ export default function AddStructureForm() {
         const structureId = crypto.randomUUID();
         data.id = structureId;
         const { error } = await supabase.from('structures').insert(data);
-        if (error) { console.error('Submit error:', error); setSending(false); return; }
+        if (error) { console.error('Submit error:', error); setSending(false); setSubmitError(true); return; }
 
         // Insert community_structures relationships
         if (communityIds.length > 0) {
@@ -115,6 +117,7 @@ export default function AddStructureForm() {
                                         />
                                     ))}
                                 </div>
+                                {submitError && <p role="alert" style={{ color: "var(--red-700)", fontWeight: 700, marginBottom: "1rem" }}>L'envoi a échoué. Vérifiez votre connexion et réessayez.</p>}
                                 <button
                                     type={"submit"}
                                     className={classNames(styles.submit)}
@@ -135,7 +138,7 @@ export default function AddStructureForm() {
                                     />
                                 </div>
                                 <div className={styles.verso}>
-                                    {props.values.illustrations.length > 0 && <img className={styles.illustration} src={props.values.illustrations[0]} />}
+                                    {props.values.illustrations.length > 0 && <img className={styles.illustration} src={props.values.illustrations[0]} alt="Aperçu de l'illustration" />}
                                     {props.values.name && <h2 className={styles.name}>{props.values.name}</h2>}
                                     {props.values.typologies && <Tags className={styles.tags} tags={props.values.typologies} /> }
                                     {props.values.description && <p className={styles.description}>{props.values.description}</p>}
@@ -145,12 +148,12 @@ export default function AddStructureForm() {
                                 </div>
                                 <div className={styles.explainer}>
                                     <h3>Comprendre ce label</h3>
-                                    <p>Ce label représente les projets portés par votre structureà mesure que des projets dont vous êtes aprtenaires sont référencés, votre label évoluera.</p>
-                                    <p>Chaque arc repésente le nombre de projets que vous avez porté, et votre rôle dans chacun d'entre eux.</p>
+                                    <p>Ce label représente les projets portés par votre structure. À mesure que des projets dont vous êtes partenaires sont référencés, votre label évoluera.</p>
+                                    <p>Chaque arc représente le nombre de projets que vous avez porté, et votre rôle dans chacun d'entre eux.</p>
                                     <ul className={styles.legends}>
                                         <li><span className={styles.legend} style={{ backgroundColor: props.values.colors[0] }}></span>Représente les projets que vous avez designés.</li>
-                                        <li><span className={styles.legend} style={{ backgroundColor: props.values.colors[3] }}></span>Représente les projets quiont été produits chez vous.</li>
-                                        <li><span className={styles.legend} style={{ backgroundColor: props.values.colors[2] }}></span>Représente les projets dont vous avez fournis la matière première.</li>
+                                        <li><span className={styles.legend} style={{ backgroundColor: props.values.colors[3] }}></span>Représente les projets qui ont été produits chez vous.</li>
+                                        <li><span className={styles.legend} style={{ backgroundColor: props.values.colors[2] }}></span>Représente les projets dont vous avez fourni la matière première.</li>
                                         <li><span className={styles.legend} style={{ backgroundColor: props.values.colors[1] }}></span>Représente les projets que vous avez soutenus, en tant que partenaire.</li>
                                     </ul>
                                 </div>

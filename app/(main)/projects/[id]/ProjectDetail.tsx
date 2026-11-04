@@ -1,4 +1,5 @@
 'use client';
+import { SITE_URL, iframeCode, pageUrl } from '@libs/site';
 import Layout from '@components/Layout'
 import LabelProject from '@components/LabelProject';
 import styles from "@styles/pages/SinglePage.module.css";
@@ -135,26 +136,26 @@ export default function ProjectDetail({ project }: ProjectDetailProps): React.JS
                     <p><span className={styles.legend} style={{ backgroundColor: project.colors[2] }}></span>Fabrication locale et sociale.</p>
                 </div>
                 <div className={styles.share}>
-                    <h2>Share</h2>
+                    <h2>Partager</h2>
                     <div className={styles.sharing}>
-                        <EmailShareButton url={`https://re-label.eu/projects/${project.id}`} subject={'Re-Label'} body={'Je viens de faire le Re-label de mon projet : '}>
+                        <EmailShareButton url={pageUrl(`/projects/${project.id}`)} subject={'Re-Label'} body={'Je viens de faire le Re-label de mon projet : '}>
                             <EmailIcon size={32} round={true} />
                         </EmailShareButton>
-                        <FacebookShareButton url={`https://re-label.eu/projects/${project.id}`} hashtag={'relabel'}>
+                        <FacebookShareButton url={pageUrl(`/projects/${project.id}`)} hashtag={'relabel'}>
                             <FacebookIcon size={32} round={true} />
                         </FacebookShareButton>
-                        <LinkedinShareButton url={`https://re-label.eu/projects/${project.id}`} title={'Re-Label'} summary={`Je viens de faire Re-labeliser mon projet ${project.name}`} source={'https://re-label.eu'}>
+                        <LinkedinShareButton url={pageUrl(`/projects/${project.id}`)} title={'Re-Label'} summary={`Je viens de faire Re-labeliser mon projet ${project.name}`} source={SITE_URL}>
                             <LinkedinIcon size={32} round={true} />
                         </LinkedinShareButton>
-                        <TwitterShareButton url={`https://re-label.eu/projects/${project.id}`} title={'Mon Re-Label'} hashtags={['relabel']}>
+                        <TwitterShareButton url={pageUrl(`/projects/${project.id}`)} title={'Mon Re-Label'} hashtags={['relabel']}>
                             <TwitterIcon size={32} round={true} />
                         </TwitterShareButton>
                     </div>
                     <div className={styles.embed}>
-                        <span onClick={() => { addToClipboard(`<iframe src="https://re-label.eu/projects/label/${project.id}" name="relabel" scrolling="no" frameborder="0" marginheight="0px" marginwidth="0px" height="300px" width="240px" allowfullscreen></iframe>`) }}>
-                            <BiCopy /> {copied ? "Ajouté au clipboard !" : "Integrer à votre site"}
-                        </span>
-                        <textarea readOnly value={`<iframe src="https://re-label.eu/projects/label/${project.id}" name="relabel" scrolling="no" frameborder="0" marginheight="0px" marginwidth="0px" height="300px" width="240px" allowfullscreen></iframe>`} />
+                        <button type="button" onClick={() => { addToClipboard(iframeCode(`/projects/label/${project.id}`)) }}>
+                            <BiCopy /> {copied ? "Copié dans le presse-papier !" : "Intégrer à votre site"}
+                        </button>
+                        <textarea readOnly aria-label="Code d'intégration" value={iframeCode(`/projects/label/${project.id}`)} />
                     </div>
                     <button className={classNames(styles.print, "button")} onClick={() => handlePrint()}> Imprimer le certificat </button>
                 </div>

@@ -1,4 +1,5 @@
 'use client';
+import { SITE_HOST, SITE_URL, iframeCode, pageUrl } from '@libs/site';
 import Layout from '@components/Layout'
 import classNames from 'classnames';
 import styles from "@styles/pages/SinglePage.module.css";
@@ -71,40 +72,40 @@ export default function StructureDetail({ structure }: StructureDetailProps) {
                 </div>
 
                 <div className={styles.explainer}>
-                    <p>Chaque arc repésente les projets portés.</p>
+                    <p>Chaque arc représente les projets portés.</p>
                     <p><span className={styles.legend} style={{ backgroundColor: structure.colors[0] }}></span>Les projets designés.</p>
                     <p><span className={styles.legend} style={{ backgroundColor: structure.colors[3] }}></span>Les projets produits chez vous.</p>
-                    <p><span className={styles.legend} style={{ backgroundColor: structure.colors[2] }}></span>Les projets dont vous avez fournis la matière.</p>
+                    <p><span className={styles.legend} style={{ backgroundColor: structure.colors[2] }}></span>Les projets dont vous avez fourni la matière.</p>
                     <p><span className={styles.legend} style={{ backgroundColor: structure.colors[1] }}></span>Les projets soutenus.</p>
                 </div>
 
                 <div className={styles.share}>
-                    <h2>Share</h2>
+                    <h2>Partager</h2>
                     <div className={styles.sharing}>
 
                         <EmailShareButton
-                            url={`https://re-label.eu/structures/${structure.id}`}
+                            url={pageUrl(`/structures/${structure.id}`)}
                             subject={'Mon Re-Label'}
-                            body={'Je viens de faire mon Re-label sur : '}
+                            body={'Je viens de faire mon Re-Label sur : '}
                         >
                             <EmailIcon size={32} round={true} />
                         </EmailShareButton>
                         <FacebookShareButton
-                            url={`https://re-label.eu/structures/${structure.id}`}
+                            url={pageUrl(`/structures/${structure.id}`)}
                             hashtag={'#relabel'}
                         >
                             <FacebookIcon size={32} round={true} />
                         </FacebookShareButton>
                         <LinkedinShareButton
-                            url={`https://re-label.eu/structures/${structure.id}`}
+                            url={pageUrl(`/structures/${structure.id}`)}
                             title={'Mon Re-Label'}
-                            summary={'Je viens de faire mon Re-label sur re-label.eu'}
-                            source={'https://re-label.eu'}
+                            summary={`Je viens de faire mon Re-Label sur ${SITE_HOST}`}
+                            source={SITE_URL}
                         >
                             <LinkedinIcon size={32} round={true} />
                         </LinkedinShareButton>
                         <TwitterShareButton
-                            url={`https://re-label.eu/structures/${structure.id}`}
+                            url={pageUrl(`/structures/${structure.id}`)}
                             title={'Mon Re-Label'}
                             hashtags={['relabel']}
                         >
@@ -113,10 +114,10 @@ export default function StructureDetail({ structure }: StructureDetailProps) {
                     </div>
 
                     <div className={styles.embed}>
-                        <span onClick={() => { addToClipboard(`<iframe src="https://re-label.eu/structures/label/${structure.id}" name="relabel" scrolling="no" frameborder="0" marginheight="0px" marginwidth="0px" height="300px" width="240px" allowfullscreen></iframe>`) }}>
-                            <BiCopy/> {copied ? "Ajouté au clipboard !" : "Integrer à votre site"}
-                        </span>
-                        <textarea readOnly value={`<iframe src="https://re-label.eu/structures/label/${structure.id}" name="relabel" scrolling="no" frameborder="0" marginheight="0px" marginwidth="0px" height="300px" width="240px" allowfullscreen></iframe>`} />
+                        <button type="button" onClick={() => { addToClipboard(iframeCode(`/structures/label/${structure.id}`)) }}>
+                            <BiCopy/> {copied ? "Copié dans le presse-papier !" : "Intégrer à votre site"}
+                        </button>
+                        <textarea readOnly aria-label="Code d'intégration" value={iframeCode(`/structures/label/${structure.id}`)} />
                     </div>
                 </div>
 

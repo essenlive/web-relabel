@@ -8,7 +8,7 @@
 ### Cleanup
 
 - [x] Cleanup loading forms
-- [x] Cleanup prisma schema
+- [x] Cleanup schema
 - [x] Remove label bugs
 - [ ] Bloquer l'update labels carte
 - [ ] Image optimizer @buildtime

@@ -1,3 +1,4 @@
+import { pageUrl } from '@libs/site';
 import LabelCommunity from '@components/LabelCommunity';
 import styles from '@styles/pages/Embeds.module.css';
 import { getCommunity, getAllCommunityIds } from '@libs/data';
@@ -13,7 +14,7 @@ export default async function CommunityLabelPage({ params }: { params: Promise<{
   const community = await getCommunity(id);
   return (
     <div className={styles.embed}>
-      <a href={`https://re-label.eu/communities/${community.id}`} target={"_parent"}></a>
+      <a href={pageUrl(`/communities/${community.id}`)} target={"_parent"} aria-label="Voir la fiche sur Re-Label"></a>
       <LabelCommunity community={community} bordered />
     </div>
   );

@@ -1,4 +1,5 @@
 'use client';
+import SmartImage from '@components/SmartImage';
 import Layout from '@components/Layout'
 import Link from 'next/link'
 import ReactMap from '@components/ReactMap'
@@ -161,9 +162,11 @@ export default function StructuresClient({ structures, communities: rawCommuniti
               className="flex items-center gap-2.5 px-3 py-2 border-b border-gray-100 hover:bg-gray-50/80 transition-colors"
             >
               {structure.illustrations[0] && (
-                <img
+                <SmartImage
                   src={structure.illustrations[0]}
-                  alt={structure.name}
+                  alt=""
+                  width={72}
+                  height={72}
                   className="w-9 h-9 rounded object-cover shrink-0 bg-gray-100"
                 />
               )}

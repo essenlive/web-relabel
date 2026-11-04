@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import { createClient } from '@libs/supabase/server';
 import { createStaticClient } from '@libs/supabase/static';
 import { prepareData } from '@libs/mapUtils';
@@ -21,7 +22,7 @@ export async function getCommunities({ status }: { status?: boolean } = {}) {
   })) as Community[];
 }
 
-export async function getCommunity(id: string) {
+export const getCommunity = cache(async (id: string) => {
   const supabase = await createClient();
   const { data: community, error } = await supabase
     .from('communities')
@@ -45,7 +46,7 @@ export async function getCommunity(id: string) {
   } as Community;
   result.mapData = prepareData(structures as Structure[]);
   return result;
-}
+});
 
 // --- Projects ---
 
@@ -70,7 +71,7 @@ export async function getProjects() {
   }) as Project[];
 }
 
-export async function getProject(id: string) {
+export const getProject = cache(async (id: string) => {
   const supabase = await createClient();
   const { data: project, error } = await supabase
     .from('projects')
@@ -129,7 +130,7 @@ export async function getProject(id: string) {
     structures: Array.from(structureMap.values()),
     project_structures: undefined,
   } as Project;
-}
+});
 
 export async function getProjectForLabel(id: string) {
   const supabase = await createClient();
@@ -186,7 +187,7 @@ export async function getStructures() {
   return { structures: enriched as Structure[], communities: (communities || []) as Community[] };
 }
 
-export async function getStructure(id: string) {
+export const getStructure = cache(async (id: string) => {
   const supabase = await createClient();
   const { data: structure, error } = await supabase
     .from('structures')
@@ -218,7 +219,7 @@ export async function getStructure(id: string) {
     community_structures: undefined,
     project_structures: undefined,
   } as Structure;
-}
+});
 
 export async function getStructureForLabel(id: string) {
   const supabase = await createClient();

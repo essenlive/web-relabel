@@ -1,3 +1,4 @@
+import { pageUrl } from '@libs/site';
 import type { Metadata } from 'next';
 import LabelStructure from '@components/LabelStructure';
 import styles from '@styles/pages/Embeds.module.css';
@@ -14,7 +15,7 @@ export default async function StructureLabelPage({ params }: { params: Promise<{
   const structure = await getStructureForLabel(id);
   return (
     <div className={styles.embed}>
-      <a href={`https://re-label.eu/structures/${structure.id}`} target={"_parent"}></a>
+      <a href={pageUrl(`/structures/${structure.id}`)} target={"_parent"} aria-label="Voir la fiche sur Re-Label"></a>
       <LabelStructure structure={structure} bordered />
     </div>
   );
