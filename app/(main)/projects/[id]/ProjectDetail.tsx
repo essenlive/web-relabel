@@ -10,7 +10,7 @@ import { BiCopy } from "react-icons/bi";
 import { mean } from 'mathjs';
 import { EmailShareButton, FacebookShareButton, LinkedinShareButton, TwitterShareButton, EmailIcon, FacebookIcon, LinkedinIcon, TwitterIcon } from "react-share";
 import { useRef, useState, useEffect, useCallback } from "react";
-import ReactToPrint from "react-to-print";
+import { useReactToPrint } from "react-to-print";
 import classNames from 'classnames';
 import { projectForm } from '@libs/formsData';
 import Certificate from "@components/Certificate";
@@ -53,29 +53,14 @@ export default function ProjectDetail({ project }: ProjectDetailProps): React.JS
         setTimeout(() => { setCopied(false) }, 1000)
     }
     const componentRef = useRef<HTMLDivElement | null>(null);
-    const onBeforeGetContentResolve = useRef<((value?: any) => void) | null>(null);
     const [visible, setVisible] = useState<boolean>(false);
-    const handleAfterPrint = useCallback(() => { setVisible(false); }, []);
-    const handleBeforePrint = useCallback(() => { setVisible(true); }, []);
-    const handleOnBeforeGetContent = useCallback(() => {
-        setVisible(true);
-        return new Promise<void>((resolve) => {
-            onBeforeGetContentResolve.current = resolve;
-            setTimeout(() => {
-                setVisible(false);
-                resolve();
-            }, 500);
-        });
-    }, [setVisible]);
-
-    useEffect(() => {
-        if (typeof onBeforeGetContentResolve.current === "function") { onBeforeGetContentResolve.current(); }
-    }, [onBeforeGetContentResolve.current]);
-
-    const reactToPrintContent = useCallback(() => { return componentRef.current; }, [componentRef.current]);
-    const reactToPrintTrigger = useCallback(() => {
-        return (<button className={classNames(styles.print,"button")}> Imprimer le certificat </button>);
-    }, []);
+    const handlePrint = useReactToPrint({
+        contentRef: componentRef,
+        documentTitle: `re-label | ${project.name}`,
+        // certificate must be rendered (visible) before it is captured
+        onBeforePrint: () => { setVisible(true); return new Promise<void>((r) => setTimeout(r, 500)); },
+        onAfterPrint: () => setVisible(false),
+    });
 
     return (
         <Layout padded>
@@ -171,15 +156,7 @@ export default function ProjectDetail({ project }: ProjectDetailProps): React.JS
                         </span>
                         <textarea readOnly value={`<iframe src="https://re-label.eu/projects/label/${project.id}" name="relabel" scrolling="no" frameborder="0" marginheight="0px" marginwidth="0px" height="300px" width="240px" allowfullscreen></iframe>`} />
                     </div>
-                    <ReactToPrint
-                        content={reactToPrintContent}
-                        documentTitle={`re-label | ${project.name}`}
-                        onAfterPrint={handleAfterPrint}
-                        onBeforeGetContent={handleOnBeforeGetContent}
-                        onBeforePrint={handleBeforePrint}
-                        removeAfterPrint
-                        trigger={reactToPrintTrigger}
-                    />
+                    <button className={classNames(styles.print, "button")} onClick={() => handlePrint()}> Imprimer le certificat </button>
                 </div>
             </div>
 
