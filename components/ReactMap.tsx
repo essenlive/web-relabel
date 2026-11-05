@@ -165,23 +165,25 @@ export default function ReactMap({ className, structures, initialViewport, color
         closeOnClick={false}
         onClose={() => close()}
         anchor="top" >
-        <div className="p-3">
+        <div>
           {selection.illustrations?.[0] && (
             <SmartImage
               src={selection.illustrations[0]}
               alt={selection.name}
               width={400}
               height={240}
-              className="-mt-3 -ml-3 mb-2 h-[120px] w-[calc(100%+1.5rem)] border-b-[3px] border-primary object-cover"
+              className="block h-[120px] w-full border-b-[3px] border-primary object-cover"
             />
           )}
-          <h3 className="mb-1 text-sm font-bold uppercase">
-            {selection.name}
-          </h3>
-          <Tags tags={selection.typologies} colorMap={resolvedColorMap} />
-          <Link href={`/structures/${selection.id}`}>
-            <p className="link mt-2 text-sm">Voir la structure</p>
-          </Link>
+          <div className="p-3">
+            <h3 className="mb-1 text-sm font-bold uppercase">
+              {selection.name}
+            </h3>
+            <Tags tags={selection.typologies} colorMap={resolvedColorMap} />
+            <Link href={`/structures/${selection.id}`}>
+              <p className="link mt-2 text-sm">Voir la structure</p>
+            </Link>
+          </div>
         </div>
       </Popup>}
 
