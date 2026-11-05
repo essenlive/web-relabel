@@ -27,12 +27,12 @@ const Tags = ({tags, colorMap, className}: TagsProps) => {
     }
 
     return (
-        <div className={cn("block [&>*:not(:last-child)]:mr-1", className)}>
+        <div className={cn("flex flex-wrap gap-1", className)}>
             {tags.map((tag: string, i: number)=>(
                 <span
-                    className="inline-flex items-center gap-1.5 mb-1 px-2 py-1 border-2 border-primary bg-white text-primary text-xs font-semibold leading-normal"
+                    className="inline-flex items-center gap-1 px-1.5 py-px border border-primary bg-white text-primary text-[11px] font-semibold leading-tight whitespace-nowrap"
                     key={i}>
-                    <span aria-hidden className="size-2.5 border border-primary" style={{ backgroundColor: resolvedColorMap.get(tag) }} />
+                    <span aria-hidden className="size-2 border border-primary" style={{ backgroundColor: resolvedColorMap.get(tag) }} />
                     {tag}
                 </span>
             ))}

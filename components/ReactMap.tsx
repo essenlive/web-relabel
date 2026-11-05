@@ -198,7 +198,7 @@ export default function ReactMap({ className, structures, initialViewport, color
           <h3 className="pl-8">Structures</h3>
         {picker.map((el: Structure, i: number)=>{
           return(
-            <div className="mt-2 flex cursor-pointer flex-row items-center justify-between hover:[&>span]:font-bold" key={el.id} onClick={()=>{onPickerClick(el)}}>
+            <div className="mt-2 flex cursor-pointer flex-row flex-wrap items-center justify-between gap-x-2 gap-y-1 hover:[&>span]:font-bold" key={el.id} onClick={()=>{onPickerClick(el)}}>
               <span>{el.name}</span>
               <Tags tags={el.typologies} colorMap={resolvedColorMap}/>
             </div>
