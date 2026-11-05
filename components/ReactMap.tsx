@@ -1,4 +1,5 @@
 'use client';
+import 'mapbox-gl/dist/mapbox-gl.css';
 import SmartImage from '@components/SmartImage';
 import React, { useState, useRef, useCallback } from 'react';
 import ReactMapGL, { Popup, Source, Layer } from 'react-map-gl/mapbox';
@@ -36,10 +37,12 @@ interface ReactMapProps {
   structures: GeoJSONFeatureCollection;
   initialViewport?: Viewport;
   colorMap?: string[];
+  // [west, south, east, north] of the visible area, on load and after each move.
+  onBoundsChange?: (bounds: [number, number, number, number]) => void;
 }
 
-export default function ReactMap({ className, structures, initialViewport, colorMap = ["#D3494E", "#FFE5AD", "#13BBAF", "#7BC8F6"]}: ReactMapProps) {
-  if (!initialViewport) {
+export default function ReactMap({ className, structures, initialViewport, colorMap = ["#D3494E", "#FFE5AD", "#13BBAF", "#7BC8F6"], onBoundsChange}: ReactMapProps) {
+  if (!initialViewport || !validCoords(initialViewport.longitude, initialViewport.latitude)) {
     initialViewport = {
       latitude: 48.85658,
       longitude: 2.3518,
@@ -59,9 +62,15 @@ export default function ReactMap({ className, structures, initialViewport, color
   suppliersLayer.paint!["circle-color"] = resolvedColorMap.get("stockage");
   othersLayer.paint!["circle-color"] = resolvedColorMap.get("autre");
 
+  const emitBounds = useCallback(() => {
+    const b = mapRef.current?.getBounds();
+    if (b && onBoundsChange) onBoundsChange([b.getWest(), b.getSouth(), b.getEast(), b.getNorth()]);
+  }, [onBoundsChange]);
+
   const flyTo = useCallback((longitude: number, latitude: number, zoom?: number) => {
     if (!isFinite(longitude) || !isFinite(latitude)) return;
-    mapRef.current?.flyTo({ center: [longitude, latitude], zoom, duration: 500 });
+    // Don't pass `zoom: undefined`: mapbox does `+options.zoom` (NaN) when the key exists.
+    mapRef.current?.flyTo({ center: [longitude, latitude], ...(zoom != null && { zoom }), duration: 500 });
   }, []);
 
   const onMouseEnter = useCallback(() => setCursor('pointer'), []);
@@ -127,6 +136,8 @@ export default function ReactMap({ className, structures, initialViewport, color
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       onClick={onMapClick}
+      onLoad={emitBounds}
+      onMoveEnd={emitBounds}
       ref={mapRef}
     >
 
@@ -164,12 +175,12 @@ export default function ReactMap({ className, structures, initialViewport, color
               className="-mt-3 -ml-3 mb-2 h-[120px] w-[calc(100%+1.5rem)] border-b-[3px] border-primary object-cover"
             />
           )}
-          <h3 className="mb-1 text-[0.85rem] font-bold uppercase">
+          <h3 className="mb-1 text-sm font-bold uppercase">
             {selection.name}
           </h3>
           <Tags tags={selection.typologies} colorMap={resolvedColorMap} />
           <Link href={`/structures/${selection.id}`}>
-            <p className="link mt-2 text-[0.8rem]">Voir la structure</p>
+            <p className="link mt-2 text-sm">Voir la structure</p>
           </Link>
         </div>
       </Popup>}

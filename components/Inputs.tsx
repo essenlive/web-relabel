@@ -1,4 +1,5 @@
 'use client';
+import { useId, useState } from "react";
 import { useField } from "formik";
 import { cn } from "@libs/utils";
 import dynamic from 'next/dynamic'
@@ -8,7 +9,7 @@ import type { FormInput } from '../types';
 const Select = dynamic(() => import('react-select'), { ssr: false })
 const CreatableSelect = dynamic(() => import('react-select/creatable'), { ssr: false })
 
-const fieldInput = "grow w-full border-b-2 border-primary px-0 py-1 text-left font-normal text-primary";
+const fieldInput = "grow w-full min-h-11 border-b-2 border-primary px-0 py-1 text-left font-normal text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary";
 
 interface InputsProps {
     input: FormInput;
@@ -18,6 +19,10 @@ interface InputsProps {
 export const Inputs = ({ input, ...props}: InputsProps) => {
     const { name, type, placeholder, prefix, suffix, options, required, handler, description} = input;
     const [field, meta, helpers] = useField(props as any);
+    const id = useId();
+    const errorId = `${id}-error`;
+    const [uploadError, setUploadError] = useState<string | null>(null);
+    const a11y = { id, "aria-invalid": !!(meta.touched && meta.error) || undefined, "aria-describedby": meta.touched && meta.error ? errorId : undefined, "aria-required": required || undefined };
     const { setValue } = helpers;
     let inputType: React.ReactNode;
     switch (type) {
@@ -26,6 +31,7 @@ export const Inputs = ({ input, ...props}: InputsProps) => {
                 <textarea
                 className={fieldInput}
                 placeholder={placeholder as string}
+                {...a11y}
                 {...field}
                 {...props}
                 />
@@ -36,6 +42,7 @@ export const Inputs = ({ input, ...props}: InputsProps) => {
                 <input
                     className={fieldInput}
                     placeholder={placeholder as string}
+                    {...a11y}
                     {...field}
                     {...props}
                 />
@@ -47,6 +54,7 @@ export const Inputs = ({ input, ...props}: InputsProps) => {
                     type={"checkbox"}
                     className={fieldInput}
                     placeholder={placeholder as string}
+                    {...a11y}
                     {...field}
                     {...props}
                 />
@@ -57,6 +65,7 @@ export const Inputs = ({ input, ...props}: InputsProps) => {
                     className={fieldInput}
                     placeholder={placeholder as string}
                     autoComplete="street-address"
+                    {...a11y}
                     {...field}
                     {...props}
                 />);
@@ -66,6 +75,7 @@ export const Inputs = ({ input, ...props}: InputsProps) => {
                     type="url"
                     className={fieldInput}
                     placeholder={placeholder as string}
+                    {...a11y}
                     {...field}
                     {...props}
                     />
@@ -76,6 +86,7 @@ export const Inputs = ({ input, ...props}: InputsProps) => {
                         type ="email"
                         className={fieldInput}
                         placeholder={placeholder as string}
+                        {...a11y}
                         {...field}
                         {...props}
                         />);
@@ -85,6 +96,7 @@ export const Inputs = ({ input, ...props}: InputsProps) => {
                         type="number"
                         className={fieldInput}
                         placeholder={placeholder as string}
+                        {...a11y}
                         {...field}
                         {...props}
                     />)
@@ -94,6 +106,7 @@ export const Inputs = ({ input, ...props}: InputsProps) => {
                         type="date"
                         className={fieldInput}
                         placeholder={placeholder as string}
+                        {...a11y}
                         {...field}
                         {...props}
                     />)
@@ -104,12 +117,15 @@ export const Inputs = ({ input, ...props}: InputsProps) => {
                     type="file"
                     accept="image/png,image/jpeg,image/webp"
                     multiple
+                    {...a11y}
                     className={fieldInput}
                     onChange={async (e) => {
                         const files = e.target.files;
                         if (!files || files.length === 0) return;
                         const supabase = createClient();
                         const urls: string[] = [];
+                        let failed = 0;
+                        setUploadError(null);
                         for (const file of Array.from(files)) {
                             const filePath = `drafts/${Date.now()}-${file.name}`;
                             const { data, error } = await supabase.storage
@@ -117,6 +133,7 @@ export const Inputs = ({ input, ...props}: InputsProps) => {
                                 .upload(filePath, file);
                             if (error) {
                                 console.error('Upload error:', error);
+                                failed++;
                                 continue;
                             }
                             const { data: urlData } = supabase.storage
@@ -124,6 +141,7 @@ export const Inputs = ({ input, ...props}: InputsProps) => {
                                 .getPublicUrl(data.path);
                             urls.push(urlData.publicUrl);
                         }
+                        if (failed) setUploadError(`${failed} image${failed > 1 ? 's' : ''} n'${failed > 1 ? 'ont' : 'a'} pas pu être envoyée${failed > 1 ? 's' : ''}. Réessayez avec un fichier plus léger.`);
                         setValue([...field.value, ...urls]);
                     }}
                 />
@@ -145,6 +163,7 @@ export const Inputs = ({ input, ...props}: InputsProps) => {
             inputType = (<Select
                         className={fieldInput}
                         classNamePrefix="select"
+                        inputId={id}
                         value={options ? options.find((option: any) => option.value === field.value) : ''}
                         onChange={(option: any) => {setValue(option.value)}}
                         onBlur={field.onBlur}
@@ -155,6 +174,7 @@ export const Inputs = ({ input, ...props}: InputsProps) => {
             inputType = (<CreatableSelect
                         className={fieldInput}
                         classNamePrefix="select"
+                        inputId={id}
                         isMulti
                         onChange={(values: any) => { setValue(values)}}
                         options={options}
@@ -165,6 +185,7 @@ export const Inputs = ({ input, ...props}: InputsProps) => {
                     className={fieldInput}
                     styles={{padding:"0 !important"} as any}
                     classNamePrefix="select"
+                        inputId={id}
                     isMulti
                     onChange={(values: any) => {setValue(values.map((el: any) => el.value))}}
                     onBlur={field.onBlur}
@@ -181,13 +202,14 @@ return (
         type === "text" && "[&_textarea]:w-full! [&_textarea]:text-left",
         type === "checkbox" && "[&_input]:size-[20px] [&_input]:grow-0"
     )}>
-        {meta.touched && meta.error ? (<div className="absolute -bottom-4 w-full text-[0.8em] text-red-700">{meta.error}</div>) : null}
-        {prefix && (<span className="font-bold">{prefix} {required && (<strong className="text-red-700">*</strong>)}</span>)}
+        {prefix && (<label htmlFor={id} className="font-bold">{prefix} {required && (<strong className="text-red-700">*</strong>)}</label>)}
         {description && (<span className="font-normal opacity-80">{description} </span>)}
         <div className="relative my-2 flex flex-row justify-stretch">
             {inputType}
-            {suffix && (<label className="ml-2 font-bold">{suffix}</label>)}
+            {suffix && (<label htmlFor={id} className="ml-2 font-bold">{suffix}</label>)}
         </div>
+        {meta.touched && meta.error ? (<div id={errorId} role="alert" className="text-sm font-semibold text-red-700">{meta.error}</div>) : null}
+        {uploadError && (<div role="alert" className="text-sm font-semibold text-red-700">{uploadError}</div>)}
 
     </div>)
 }

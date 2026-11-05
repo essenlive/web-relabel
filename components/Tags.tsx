@@ -4,12 +4,11 @@ interface TagsProps {
     tags: string[];
     colorMap?: Map<string, string> | string[];
     className?: string;
-    dark?: boolean;
 }
 
 const DEFAULT_COLORS = ["#facc15", "#38bdf8", "#4ade80", "#fb7185", "#f472b6", "#22d3ee"];
 
-const Tags = ({tags, colorMap, className, dark}: TagsProps) => {
+const Tags = ({tags, colorMap, className}: TagsProps) => {
 
     let resolvedColorMap: Map<string, string>;
 
@@ -31,9 +30,11 @@ const Tags = ({tags, colorMap, className, dark}: TagsProps) => {
         <div className={cn("block [&>*:not(:last-child)]:mr-1", className)}>
             {tags.map((tag: string, i: number)=>(
                 <span
-                    className={cn("inline-block mb-1 px-2 py-1 rounded-sm bg-zinc-100 text-xs leading-normal font-normal", dark ? "text-black" : "text-white")}
-                    style={{ backgroundColor: resolvedColorMap.get(tag) }}
-                    key={i}>{tag}</span>
+                    className="inline-flex items-center gap-1.5 mb-1 px-2 py-1 border-2 border-primary bg-white text-primary text-xs font-semibold leading-normal"
+                    key={i}>
+                    <span aria-hidden className="size-2.5 border border-primary" style={{ backgroundColor: resolvedColorMap.get(tag) }} />
+                    {tag}
+                </span>
             ))}
         </div>
     );

@@ -9,23 +9,27 @@ interface LayoutProps {
   children?: ReactNode;
   grid?: boolean;
   fullWidth?: boolean;
+  // Edge-to-edge bands: header, page sections and footer share one set of rules.
+  bleed?: boolean;
 }
 
-const Layout = ({full, padded, children, grid, fullWidth}: LayoutProps) => {
+const Layout = ({full, padded, children, grid, fullWidth, bleed}: LayoutProps) => {
   return (
     <div className={cn(
-      "flex min-h-screen flex-col overflow-x-hidden bg-[url('/assets/memphis-mini.png')] bg-fixed bg-repeat print:bg-none",
+      "flex min-h-screen flex-col overflow-x-hidden bg-white bg-[url('/assets/memphis-tint.png')] bg-repeat print:bg-none",
     )} >
       <header className={cn(
         "w-full shrink-0 z-100 print:hidden",
-        full && "absolute top-0 left-0 right-0 z-50"
+        full && "absolute top-0 left-0 right-0 z-50",
+        bleed && "border-b-4 border-primary bg-white"
       )}>
-        <Navigation />
+        <Navigation wide={bleed} />
       </header>
 
       <main className={cn(
         "flex-1 w-full mx-auto flex flex-col items-center",
-        !full && "max-w-270",
+        !full && !bleed && "max-w-270",
+        bleed && "items-stretch bg-white",
         "max-md:w-full",
         padded && "mt-20 mb-8 px-8 pb-16",
         full && "h-screen max-w-full overflow-hidden relative",
@@ -36,7 +40,7 @@ const Layout = ({full, padded, children, grid, fullWidth}: LayoutProps) => {
         {children}
       </main>
 
-      <Footer />
+      <Footer wide={bleed} />
     </div>
   );
 }

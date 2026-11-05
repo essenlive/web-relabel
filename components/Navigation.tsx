@@ -14,7 +14,7 @@ const LINKS = [
   { href: '/contact', label: 'Nous contacter' },
 ];
 
-export default function Navigation() {
+export default function Navigation({ wide }: { wide?: boolean }) {
   const pathname = usePathname()
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const close = () => setMenuOpen(false);
@@ -34,6 +34,7 @@ export default function Navigation() {
       aria-label="Navigation principale"
       className={cn(
         "flex items-start justify-between py-4 px-4 mx-auto w-full max-w-270 h-25 relative z-10",
+        wide && "max-w-none px-6 lg:px-10",
         "max-md:flex-col max-md:h-auto",
         menuOpen && "max-md:fixed max-md:inset-0 max-md:h-full max-md:bg-white max-md:z-50 max-md:justify-start"
       )}>
@@ -71,7 +72,7 @@ export default function Navigation() {
 
       {menuOpen && (
         <div className="absolute bottom-0 left-0 p-4 m-6 text-sm font-medium md:hidden">
-          Fait avec ❤️ à Paris
+          Fait à Paris
         </div>
       )}
 

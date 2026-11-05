@@ -75,7 +75,7 @@ export default function AddStructureForm() {
             await supabase.from('community_structures').insert(links);
         }
 
-        router.push(`/`);
+        router.push('/merci');
     }
 
     return (

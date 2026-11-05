@@ -26,7 +26,8 @@ const Card = ({ title, description, tags, colorMap, link, image, children, class
             {/* With a label as front face, the details only appear on hover */}
             <div className={cn(
                 "absolute inset-0 flex flex-col content-center justify-between overflow-auto bg-white transition-all duration-250 ease-in-out",
-                children && "opacity-0 group-hover:opacity-100"
+                // Touch/keyboard: reveal on focus; coarse pointers get the details stacked under the label.
+                children && "opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 pointer-coarse:static pointer-coarse:opacity-100 pointer-coarse:border-t-4 pointer-coarse:border-primary"
             )}>
                 {image && image.src &&
                     <SmartImage
@@ -49,8 +50,8 @@ const Card = ({ title, description, tags, colorMap, link, image, children, class
                     <p className={textBlock}>{description}</p>
                 }
                 {link &&
-                    <Link href={{pathname: link.path}}>
-                        <p className="link px-6 py-6">{link.text}</p>
+                    <Link href={{pathname: link.path}} className="focus-visible:outline-2 focus-visible:outline-primary focus-visible:-outline-offset-4">
+                        <span className="link block px-6 py-6">{link.text}</span>
                     </Link>
                 }
             </div>

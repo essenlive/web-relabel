@@ -36,7 +36,7 @@ const ProjectAttributes = ({ name, options, selection, baseColor, accentColor }:
     return(
         <div>
             <p><b>{name}</b></p>
-            <Tags tags={options} colorMap={colorMap} dark/>
+            <Tags tags={options} colorMap={colorMap}/>
         </div>
     )
 }

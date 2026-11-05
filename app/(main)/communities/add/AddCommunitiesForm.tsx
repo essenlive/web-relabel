@@ -46,7 +46,7 @@ export default function AddCommunitiesForm(): React.JSX.Element | React.ReactEle
         delete data.rgpd;
         const { error } = await supabase.from('communities').insert(data);
         if (error) { console.error('Submit error:', error); setSending(false); setSubmitError(true); return; }
-        router.push(`/`);
+        router.push('/merci');
     }
 
     return (

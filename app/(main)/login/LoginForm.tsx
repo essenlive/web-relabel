@@ -35,29 +35,31 @@ export default function LoginForm() {
             <div className={formStyles.form}>
                 <form className={formStyles.values} onSubmit={handleSubmit}>
                     <h2>Connexion</h2>
-                    {error && <div role="alert" className="mb-4 text-rose-500">{error}</div>}
+                    {error && <div role="alert" className="mb-4 font-bold text-red-700">{error}</div>}
                     <div>
-                        <span className="font-bold">Email</span>
+                        <label htmlFor="login-email" className="font-bold">Email</label>
                         <input
+                            id="login-email"
                             type="email"
                             autoComplete="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             placeholder="admin@essenlive.xyz"
                             required
-                            className="mb-4 w-full p-2"
+                            className="mb-4 w-full min-h-11 border-b-2 border-primary p-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                         />
                     </div>
                     <div>
-                        <span className="font-bold">Mot de passe</span>
+                        <label htmlFor="login-password" className="font-bold">Mot de passe</label>
                         <input
+                            id="login-password"
                             type="password"
                             autoComplete="current-password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             placeholder="••••••••"
                             required
-                            className="mb-4 w-full p-2"
+                            className="mb-4 w-full min-h-11 border-b-2 border-primary p-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                         />
                     </div>
                     <button type="submit" className="button" disabled={loading}>

@@ -71,7 +71,7 @@ export default function AddProjectForm(): React.JSX.Element {
             await supabase.from('project_structures').insert(links);
         }
 
-        router.push(`/`);
+        router.push('/merci');
     }
 
     return (
